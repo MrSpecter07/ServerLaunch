@@ -2,6 +2,7 @@
 logs/
 *.log
 *.tmp
+*.md
 
 # Configuración local
 config/last_server.txt

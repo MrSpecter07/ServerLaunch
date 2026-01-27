@@ -63,7 +63,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
             </TabControl.Resources>
             
             <!-- Tab: Principal -->
-            <TabItem Header="Principal">
+            <TabItem x:Name="TabPrincipal" Header="Principal">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="20">
                         <!-- Servidor -->
@@ -117,10 +117,10 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         
                         <!-- Estado -->
                         <TextBlock x:Name="LblStatus" Text="Estado" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
-                        <TextBlock x:Name="StatusText" Text="Estado: No configurado" FontSize="12" Foreground="#FFB74D" Margin="0,0,0,20"/>
+                        <TextBlock x:Name="StatusText" Text="No configurado" FontSize="12" Foreground="#FFB74D" Margin="0,0,0,20"/>
                         
                         <!-- Consola -->
-                        <TextBlock x:Name="LblConsole" Text="Consola" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
+                        <TextBlock x:Name="LblConsole" Text="Consola" FontSize="13" FontWeight="Bold" Margin="10,0,0,8"/>
                         <Border Background="#0D0D0D" BorderBrush="#3C3C3C" BorderThickness="1" Padding="10" Margin="0,0,0,10">
                             <ScrollViewer x:Name="ConsoleScroll" Height="200" VerticalScrollBarVisibility="Auto">
                                 <TextBox x:Name="OutputBox" Background="Transparent" Foreground="#00FF00" 
@@ -130,19 +130,19 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         </Border>
                         <Button x:Name="ClearLog" Content="Limpiar Consola" Width="150" Height="30" 
                                 Background="#555555" Foreground="White" FontWeight="Bold" 
-                                HorizontalAlignment="Left" Cursor="Hand" Margin="0,0,0,10"/>
+                                HorizontalAlignment="Left" Cursor="Hand" Margin="10,0,0,10"/>
                         
                         <!-- Jugadores Online -->
-                        <TextBlock x:Name="LblPlayersOnline" Text="Jugadores Online" FontSize="13" FontWeight="Bold" Margin="0,10,0,8"/>
+                        <TextBlock x:Name="LblPlayersOnline" Text="Jugadores Online" FontSize="13" FontWeight="Bold" Margin="10,10,0,8"/>
                         <Border Background="#2D2D2D" BorderBrush="#3C3C3C" BorderThickness="1" Padding="15" CornerRadius="5">
-                            <TextBlock x:Name="PlayersBox" Text="Nadie conectado" FontSize="11" Foreground="#888888" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="PlayersBox" Text="Sin jugadores conectados" FontSize="11" Foreground="#888888" TextWrapping="Wrap"/>
                         </Border>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
             
             <!-- Tab: PlayIT -->
-            <TabItem Header="PlayIT">
+            <TabItem x:Name="TabPlayIT" Header="PlayIT">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="20">
                         
@@ -176,7 +176,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
             </TabItem>
 
             <!-- Tab: Configuracion -->
-            <TabItem Header="Configuracion">
+            <TabItem x:Name="TabConfiguracion" Header="Configuracion">
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="20">
                         
@@ -184,14 +184,21 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <TextBlock x:Name="LblAutoShutdown" Text="Auto-Shutdown" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
                         <CheckBox x:Name="AutoShutdownCheck" Content="Activar apagado automatico por inactividad" 
                                   Foreground="White" Margin="0,0,0,10" FontSize="12"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
+                        <TextBlock x:Name="LblIdleMsg" Text="(Apagara el servidor cuando no hay jugadores por X minutos)" Foreground="#999999" FontSize="10" Margin="0,0,0,10" TextWrapping="Wrap"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
                             <TextBlock x:Name="LblIdleMinutes" Text="Minutos inactivo:" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="12"/>
                             <TextBox x:Name="IdleMinutesBox" Width="80" Height="30" Padding="8" 
                                      Background="#3C3C3C" Foreground="White" Text="30" FontSize="12"/>
                         </StackPanel>
+                        <CheckBox x:Name="ShutdownPCCheck" Content="Apagar computadora despues de cerrar el servidor" 
+                                  Foreground="White" Margin="0,0,0,15" FontSize="12"/>
+                        <CheckBox x:Name="OnlyShutdownOutsideHoursCheck" Content="Solo apagar fuera de horas de operacion (no interrumpir durante horarios)" 
+                                  Foreground="White" Margin="0,0,0,30" FontSize="12"/>
                         
                         <!-- Horarios -->
                         <TextBlock x:Name="LblOperatingHours" Text="Horarios de Operacion" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
+                        <CheckBox x:Name="EnableOperatingHoursCheck" Content="Activar horarios de operacion (24/7 si esta deshabilitado)" 
+                                  Foreground="White" Margin="0,0,0,15" FontSize="12"/>
                         <CheckBox x:Name="StartOnBootCheck" Content="Iniciar servidor al encender PC" 
                                   Foreground="White" Margin="0,0,0,15" FontSize="12"/>
                         <Grid Margin="0,0,0,30">
@@ -208,21 +215,22 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                             <TextBlock x:Name="LblStartTime" Grid.Row="0" Grid.Column="0" Text="Hora inicio:" VerticalAlignment="Center" FontSize="12"/>
                             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
                                 <TextBox x:Name="StartHourBox" Width="60" Height="30" Padding="8" 
-                                         Background="#3C3C3C" Foreground="White" Text="08" FontSize="12"/>
+                                         Background="#3C3C3C" Foreground="White" Text="08" FontSize="12" MaxLength="2"/>
                                 <TextBlock Text=":" VerticalAlignment="Center" Margin="5,0" FontSize="14"/>
                                 <TextBox x:Name="StartMinBox" Width="60" Height="30" Padding="8" 
-                                         Background="#3C3C3C" Foreground="White" Text="00" FontSize="12"/>
+                                         Background="#3C3C3C" Foreground="White" Text="00" FontSize="12" MaxLength="2"/>
                             </StackPanel>
                             
                             <TextBlock x:Name="LblEndTime" Grid.Row="2" Grid.Column="0" Text="Hora fin:" VerticalAlignment="Center" FontSize="12"/>
                             <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
                                 <TextBox x:Name="StopHourBox" Width="60" Height="30" Padding="8" 
-                                         Background="#3C3C3C" Foreground="White" Text="23" FontSize="12"/>
+                                         Background="#3C3C3C" Foreground="White" Text="23" FontSize="12" MaxLength="2"/>
                                 <TextBlock Text=":" VerticalAlignment="Center" Margin="5,0" FontSize="14"/>
                                 <TextBox x:Name="StopMinBox" Width="60" Height="30" Padding="8" 
-                                         Background="#3C3C3C" Foreground="White" Text="30" FontSize="12"/>
+                                         Background="#3C3C3C" Foreground="White" Text="30" FontSize="12" MaxLength="2"/>
                             </StackPanel>
                         </Grid>
+                        <TextBlock x:Name="LblHoursRange" Text="(Horas: 0-23, Minutos: 0-59)" Foreground="#999999" FontSize="10" Margin="0,0,0,30" TextWrapping="Wrap"/>
                         
                         <!-- Auto-Backup -->
                         <TextBlock x:Name="LblAutoBackup" Text="Auto-Backup" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
@@ -235,7 +243,10 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         </StackPanel>
 
                         <!-- Auto Clear Console -->
-                        <TextBlock x:Name="LblConsoleSettings" Text="Consola" FontSize="14" FontWeight="Bold" Margin="10,0,0,10" Foreground="#4CAF50"/>
+                        <TextBlock x:Name="LblConsoleSettings" Text="Consola" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
+                        <CheckBox x:Name="EnableConsoleLoggingCheck" Content="Habilitar logging de consola (registra estado en archivos)" 
+                                  Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <TextBlock x:Name="LblMonitoringMessages" Text="(Mostrara mensajes de monitoreo: jugadores, inactividad, etc.)" Foreground="#999999" FontSize="10" Margin="0,0,0,10" TextWrapping="Wrap"/>
                         <CheckBox x:Name="AutoClearCheck" Content="Limpiar consola automatico" 
                                   Foreground="White" Margin="0,0,0,10" FontSize="12"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
@@ -292,6 +303,15 @@ $script:playitVoicechatIP = ""
 $script:playitIPsDetected = $false
 $script:autoShutdownEnabled = $false
 $script:autoShutdownMinutes = 30
+$script:shutdownPCAfterServer = $false
+$script:enableOperatingHours = $false
+$script:onlyShutdownOutsideHours = $false
+$script:enableConsoleLogging = $false
+$script:startHourSaved = 8  # Default operating hours
+$script:startMinSaved = 0
+$script:stopHourSaved = 23
+$script:stopMinSaved = 30
+$script:consoleLogsDir = Join-Path $scriptPath "logs"
 $script:autoBackupEnabled = $false
 $script:backupIntervalMinutes = 60
 $script:autoClearEnabled = $false
@@ -302,10 +322,17 @@ $script:consoleStickToBottom = $true
 $script:serverState = "idle"  # idle|starting|running|stopping
 $script:onlinePlayers = @()
 $script:backupNameMap = @{}
+$script:serverFullyLoaded = $false  # Server loaded flags
+$script:serverLoadFlag1 = $false  # "Preparing level" flag
+$script:serverLoadFlag2 = $false  # "Dedicated server took X seconds to load" flag
+$script:serverLoadStartTime = $null  # Timer for 30-second timeout on flag 2
+$script:lastPlayerSeenTime = $null  # Last time a player was detected
+$script:idleCheckTimer = $null  # Timer para verificar inactividad
 $script:lastServerPath = ""
 $script:lastServerConfigPath = Join-Path $scriptPath "config\last_server.txt"
 $script:currentLanguage = "es"
 $script:languageConfigPath = Join-Path $scriptPath "config\language.txt"
+$script:settingsConfigPath = Join-Path $scriptPath "config\settings.json"
 
 $script:translations = @{
     es = @{
@@ -314,18 +341,21 @@ $script:translations = @{
         server_control = "Control del Servidor"; start = "Iniciar"; stop = "Detener"
         restart = "Reiniciar"; terminate = "Terminar"; backups = "Backups"; restore = "Restaurar"
         status = "Estado"; console = "Consola"; clear_console = "Limpiar Consola"
-        players_online = "Jugadores Online"; no_players = "Nadie conectado"
+        players_online = "Jugadores Online"; no_players = "Sin jugadores conectados"
         ip_server = "IP Server"; ip_voicechat = "IP Voicechat"; copy = "Copiar"
         open_playit = "Abrir Panel de PlayIT"; playit_status = "Estado"; playit_not_started = "PlayIT no iniciado"
         not_detected = "No detectado"; ips_detected = "IPs detectadas correctamente"
         auto_shutdown = "Auto-Shutdown"; enable_auto_shutdown = "Activar apagado automatico por inactividad"
-        idle_minutes = "Minutos inactivo:"; operating_hours = "Horarios de Operacion"
+        idle_minutes = "Minutos inactivo:"; shutdown_pc = "Apagar computadora despues de cerrar el servidor"
+        only_shutdown_outside = "Solo apagar fuera de horas de operacion (no interrumpir durante horarios)"
+        enable_console_logging = "Habilitar logging de consola (registra estado en archivos)"
+        enable_operating_hours = "Activar horarios de operacion (24/7 si esta deshabilitado)"; operating_hours = "Horarios de Operacion"
         start_on_boot = "Iniciar servidor al encender PC"; start_time = "Hora inicio:"
         end_time = "Hora fin:"; auto_backup = "Auto-Backup"; enable_auto_backup = "Activar backup automatico periodico"
         interval_min = "Intervalo (min):"; console_settings = "Consola"; auto_clear = "Limpiar consola automatico"
         every_min = "Cada (min):"; line_limit = "Limite lineas:"; language = "Idioma"
         save_config = "Guardar Configuracion"; select_server = "Selecciona un servidor primero"
-        error = "Error"; success = "Exito"; info = "Informacion"; select_backup = "Selecciona un backup primero"
+        error = "Error"; success = "Exito"; info = "Informacion"; warning = "Advertencia"; select_backup = "Selecciona un backup primero"
         system = "Sistema"; backup = "Backup"; config = "Config"
         detected_server = "Servidor detectado:"; launch_started = "ServerLaunch v2.0 iniciado"
         select_to_start = "Selecciona un servidor para comenzar"; starting_server = "Iniciando servidor..."
@@ -352,6 +382,16 @@ $script:translations = @{
         config_saved_msg = "Configuracion guardada correctamente"; error_saving = "Error al guardar:"
         hours_saved = "Horarios guardados:"; boot_enabled = "Inicio automatico habilitado"
         error_saving_hours = "Error guardando horarios:"; min_short = "min"; lines_short = "lineas"
+        cannot_shutdown_during_hours = "No se puede apagar durante las horas de operacion configuradas. Desactiva 'Solo apagar fuera de horas' si es necesario apagar ahora."
+        monitoring_messages = "(Mostrara mensajes de monitoreo: jugadores, inactividad, etc.)"
+        tab_principal = "Principal"; tab_playit = "PlayIT"; tab_configuracion = "Configuracion"
+        server_fully_loaded = "Servidor completamente cargado"
+        idle_shutdown_msg = "Servidor inactivo por X minutos - apagando"
+        idle_msg = "(Apagara el servidor cuando no hay jugadores por X minutos)"
+        server_ready_join = "Servidor listo - ya pueden unirse"
+        ips_detected_success = "IPs detectadas correctamente"
+        not_configured = "No configurado"
+        hours_range = "(Horas: 0-23, Minutos: 0-59)"
     }
     en = @{
         app_title = "SERVER LAUNCH"; app_subtitle = "Minecraft Server Manager"
@@ -359,18 +399,21 @@ $script:translations = @{
         server_control = "Server Control"; start = "Start"; stop = "Stop"
         restart = "Restart"; terminate = "Kill"; backups = "Backups"; restore = "Restore"
         status = "Status"; console = "Console"; clear_console = "Clear Console"
-        players_online = "Players Online"; no_players = "No one connected"
+        players_online = "Players Online"; no_players = "No players connected"
         ip_server = "Server IP"; ip_voicechat = "Voicechat IP"; copy = "Copy"
         open_playit = "Open PlayIT Panel"; playit_status = "Status"; playit_not_started = "PlayIT not started"
         not_detected = "Not detected"; ips_detected = "IPs detected successfully"
         auto_shutdown = "Auto-Shutdown"; enable_auto_shutdown = "Enable automatic shutdown on idle"
-        idle_minutes = "Idle minutes:"; operating_hours = "Operating Hours"
+        idle_minutes = "Idle minutes:"; shutdown_pc = "Shutdown computer after closing server"
+        only_shutdown_outside = "Only shutdown outside operating hours (do not interrupt)"
+        enable_console_logging = "Enable console logging (records status in files)"
+        enable_operating_hours = "Enable operating hours (24/7 if disabled)"; operating_hours = "Operating Hours"
         start_on_boot = "Start server on PC boot"; start_time = "Start time:"
         end_time = "End time:"; auto_backup = "Auto-Backup"; enable_auto_backup = "Enable automatic periodic backup"
         interval_min = "Interval (min):"; console_settings = "Console"; auto_clear = "Auto-clear console"
         every_min = "Every (min):"; line_limit = "Line limit:"; language = "Language"
-        save_config = "Save Configuration"; select_server = "Select a server first"
-        error = "Error"; success = "Success"; info = "Information"; select_backup = "Select a backup first"
+        save_config = "Save Settings"; select_server = "Select a server first"
+        error = "Error"; success = "Success"; info = "Information"; warning = "Warning"; select_backup = "Select a backup first"
         system = "System"; backup = "Backup"; config = "Config"
         detected_server = "Server detected:"; launch_started = "ServerLaunch v2.0 started"
         select_to_start = "Select a server to begin"; starting_server = "Starting server..."
@@ -397,6 +440,16 @@ $script:translations = @{
         config_saved_msg = "Configuration saved successfully"; error_saving = "Error saving:"
         hours_saved = "Hours saved:"; boot_enabled = "Boot autostart enabled"
         error_saving_hours = "Error saving hours:"; min_short = "min"; lines_short = "lines"
+        cannot_shutdown_during_hours = "Cannot shutdown during configured operating hours. Disable 'Only shutdown outside hours' if you need to shutdown now."
+        monitoring_messages = "(Will show monitoring messages: players, inactivity, etc.)"
+        tab_principal = "Main"; tab_playit = "PlayIT"; tab_configuracion = "Settings"
+        server_fully_loaded = "Server fully loaded"
+        idle_shutdown_msg = "Server idle for X minutes - shutting down"
+        idle_msg = "(Will shutdown server when no players for X minutes)"
+        server_ready_join = "Server ready - players can join now"
+        ips_detected_success = "IPs detected successfully"
+        not_configured = "Not configured"
+        hours_range = "(Hours: 0-23, Minutes: 0-59)"
     }
 }
 
@@ -431,8 +484,12 @@ function Update-UILanguage {
     
     # CheckBoxes
     $window.FindName("AutoShutdownCheck").Content = Get-Text 'enable_auto_shutdown'
+    $window.FindName("ShutdownPCCheck").Content = Get-Text 'shutdown_pc'
+    $window.FindName("OnlyShutdownOutsideHoursCheck").Content = Get-Text 'only_shutdown_outside'
+    $window.FindName("EnableOperatingHoursCheck").Content = Get-Text 'enable_operating_hours'
     $window.FindName("StartOnBootCheck").Content = Get-Text 'start_on_boot'
     $window.FindName("AutoBackupCheck").Content = Get-Text 'enable_auto_backup'
+    $window.FindName("EnableConsoleLoggingCheck").Content = Get-Text 'enable_console_logging'
     $window.FindName("AutoClearCheck").Content = Get-Text 'auto_clear'
     
     # TextBlocks - Tab Principal
@@ -458,17 +515,33 @@ function Update-UILanguage {
     $window.FindName("LblAutoBackup").Text = Get-Text 'auto_backup'
     $window.FindName("LblIntervalMin").Text = Get-Text 'interval_min'
     $window.FindName("LblConsoleSettings").Text = Get-Text 'console_settings'
+    $window.FindName("LblMonitoringMessages").Text = Get-Text 'monitoring_messages'
+    $window.FindName("LblIdleMsg").Text = Get-Text 'idle_msg'
     $window.FindName("LblEveryMin").Text = Get-Text 'every_min'
     $window.FindName("LblLineLimit").Text = Get-Text 'line_limit'
     $window.FindName("LblLanguage").Text = Get-Text 'language'
     
-    # Actualizar estado inicial si no hay servidor cargado
+    # Traducir rango de horas
+    $window.FindName("LblHoursRange").Text = Get-Text 'hours_range'
+    
+    # Traducir pestañas
+    $window.FindName("TabPrincipal").Header = Get-Text 'tab_principal'
+    $window.FindName("TabPlayIT").Header = Get-Text 'tab_playit'
+    $window.FindName("TabConfiguracion").Header = Get-Text 'tab_configuracion'
+    
+    # Actualizar estado inicial si no hay servidor cargado - similar a PlayIT
     $statusText = $window.FindName("StatusText")
-    if ($statusText -and $statusText.Text -notmatch "PID|running|stopped") {
-        $statusText.Text = "$(Get-Text 'status'): $(Get-Text 'select_to_start')"
+    if ($statusText) {
+        if (-not $script:serverManager -or -not $script:serverManager.IsRunning) {
+            # Si el servidor NO está corriendo, mostrar "select_to_start"
+            $statusText.Text = Get-Text 'select_to_start'
+        } else {
+            # Si el servidor está corriendo, mostrar "server_loaded"
+            $statusText.Text = Get-Text 'server_loaded'
+        }
     }
     
-    # Actualizar jugadores si no hay nadie
+    # Actualizar jugadores si no hay ninguno conectado
     $playersBox = $window.FindName("PlayersBox")
     if ($playersBox -and $script:onlinePlayers.Count -eq 0) {
         $playersBox.Text = Get-Text 'no_players'
@@ -476,17 +549,17 @@ function Update-UILanguage {
     
     # Actualizar estado PlayIT si no esta iniciado
     $playitStatus = $window.FindName("PlayitStatus")
-    if ($playitStatus -and $playitStatus.Text -notmatch "PID") {
+    if ($playitStatus -and (-not $script:playitProcess -or $script:playitProcess.HasExited)) {
         $playitStatus.Text = Get-Text 'playit_not_started'
     }
     
-    # Actualizar IPs de PlayIT si no estan detectadas
+    # Actualizar IPs de PlayIT si no estan detectadas - solo si estan vacías
     $minecraftIP = $window.FindName("PlayitMinecraftIP")
-    if ($minecraftIP -and -not $script:playitIPsDetected) {
+    if ($minecraftIP -and [string]::IsNullOrWhiteSpace($minecraftIP.Text)) {
         $minecraftIP.Text = Get-Text 'not_detected'
     }
     $voicechatIP = $window.FindName("PlayitVoicechatIP")
-    if ($voicechatIP -and -not $script:playitIPsDetected) {
+    if ($voicechatIP -and [string]::IsNullOrWhiteSpace($voicechatIP.Text)) {
         $voicechatIP.Text = Get-Text 'not_detected'
     }
 }
@@ -499,6 +572,35 @@ function Get-ServerJavaProcesses {
             ($_.Path -and $_.Path -like "*$serverPath*") -or
             ($_.StartInfo -and $_.StartInfo.WorkingDirectory -and $_.StartInfo.WorkingDirectory -like "*$serverPath*")
         } catch { $false }
+    }
+}
+
+function Test-IsWithinOperatingHours {
+    if (-not $script:enableOperatingHours) { return $false }
+    
+    try {
+        $now = Get-Date
+        $currentHour = $now.Hour
+        $currentMin = $now.Minute
+        $currentTotalMin = $currentHour * 60 + $currentMin
+        
+        # Usar las variables guardadas o el ScheduleManager
+        $startH = if ($script:scheduleManager) { $script:scheduleManager.StartHour } else { $script:startHourSaved }
+        $startM = if ($script:scheduleManager) { $script:scheduleManager.StartMin } else { $script:startMinSaved }
+        $stopH = if ($script:scheduleManager) { $script:scheduleManager.StopHour } else { $script:stopHourSaved }
+        $stopM = if ($script:scheduleManager) { $script:scheduleManager.StopMin } else { $script:stopMinSaved }
+        
+        $startTotal = $startH * 60 + $startM
+        $stopTotal = $stopH * 60 + $stopM
+        
+        if ($startTotal -le $stopTotal) {
+            return ($currentTotalMin -ge $startTotal -and $currentTotalMin -lt $stopTotal)
+        } else {
+            # Hours cross midnight
+            return ($currentTotalMin -ge $startTotal -or $currentTotalMin -lt $stopTotal)
+        }
+    } catch {
+        return $false
     }
 }
 
@@ -545,7 +647,7 @@ function Cleanup-AfterServerStopped {
     $script:serverManager.IsRunning = $false
     $script:onlinePlayers = @()
     Update-PlayerList
-    Update-Status "Servidor detenido" "#FF6B6B"
+    Update-Status "server_stopped_status" "#FF6B6B"
     Append-Log "[Sistema] Todos los servicios detenidos correctamente"
     Set-ControlState "idle"
 }
@@ -553,7 +655,15 @@ function Cleanup-AfterServerStopped {
 # Funciones auxiliares
 function Update-Status {
     param([string]$msg, [string]$color = "#FFB74D")
-    $window.FindName("StatusText").Text = "Estado: $msg"
+    # Intentar traducir el mensaje
+    $translatedMsg = Get-Text $msg
+    if ($translatedMsg -eq $msg) {
+        # Si no hay traducción, usar el mensaje como está
+        $statusText = $msg
+    } else {
+        $statusText = $translatedMsg
+    }
+    $window.FindName("StatusText").Text = $statusText
     $window.FindName("StatusText").Foreground = $color
 }
 
@@ -565,6 +675,20 @@ function Append-Log {
         $timestamp = Get-Date -Format "HH:mm:ss"
         $shouldStick = $script:consoleStickToBottom
         $box.AppendText("[$timestamp] $line`r`n")
+        
+        # Log to file if console logging is enabled
+        if ($script:enableConsoleLogging) {
+            try {
+                $logDir = Split-Path $script:consoleLogsDir -Parent
+                if (-not (Test-Path $logDir)) {
+                    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+                }
+                $logFile = Join-Path $logDir ("console_$(Get-Date -Format 'yyyyMMdd').log")
+                $logEntry = "[$timestamp] $line"
+                Add-Content -Path $logFile -Value $logEntry -Encoding UTF8 -ErrorAction SilentlyContinue
+            } catch { }
+        }
+        
         # Auto clear
         if ($script:autoClearEnabled) {
             $minutesSince = ((Get-Date) - $script:lastClearTime).TotalMinutes
@@ -636,13 +760,13 @@ function Load-ServerPath {
         $script:scheduleManager = [ScheduleManager]::new($path)
         $backupRoot = Join-Path $scriptPath "backups"
         $script:backupManager = [BackupManager]::new($backupRoot, { param($msg) Append-Log $msg })
-        Update-Status "Servidor cargado correctamente" "#4CAF50"
+        Update-Status "server_loaded" "#4CAF50"
         Append-Log "[Sistema] Servidor detectado: $($script:serverManager.ServerName)"
         Refresh-BackupList
     }
     catch {
         Append-Log "[ERROR] Error al cargar servidor: $_"
-        Update-Status "Error al cargar servidor" "#FF6B6B"
+        Update-Status "error_loading" "#FF6B6B"
     }
 }
 
@@ -760,7 +884,7 @@ $window.FindName("StartBtn").Add_Click({
     if ($script:serverState -eq "running") { Append-Log "[Sistema] El servidor ya esta iniciado"; return }
     if ($script:serverManager) {
         Set-ControlState "starting"
-        Update-Status "Iniciando..." "#FFB74D"
+        Update-Status "starting" "#FFB74D"
         Append-Log "[Sistema] Iniciando servidor..."
         
         try {
@@ -777,11 +901,10 @@ $window.FindName("StartBtn").Add_Click({
             New-Item -ItemType File -Path $script:playitErrLog -Force -ErrorAction SilentlyContinue | Out-Null
             New-Item -ItemType File -Path $script:serverLog -Force -ErrorAction SilentlyContinue | Out-Null
             
-            # Iniciar PlayIT primero
-            $playitExe = "C:\Program Files\playit_gg\bin\playit.exe"
-            if (Test-Path $playitExe) {
+            # Iniciar PlayIT primero (solo si se configuró una ruta)
+            if ($script:playitPath -and (Test-Path $script:playitPath)) {
                 try {
-                    $script:playitProcess = Start-Process -FilePath $playitExe `
+                    $script:playitProcess = Start-Process -FilePath $script:playitPath `
                         -WindowStyle Hidden `
                         -RedirectStandardOutput $script:playitLog `
                         -RedirectStandardError $script:playitErrLog `
@@ -795,7 +918,11 @@ $window.FindName("StartBtn").Add_Click({
                     Append-Log "[PlayitErr] Error al iniciar PlayIT: $_"
                 }
             } else {
-                Append-Log "[Sistema] PlayIT no encontrado en: $playitExe"
+                if ($script:playitPath) {
+                    Append-Log "[Sistema] PlayIT no encontrado en: $($script:playitPath)"
+                } else {
+                    Append-Log "[Sistema] PlayIT no configurado - ejecutando solo en LAN"
+                }
             }
             
             # Iniciar servidor
@@ -834,7 +961,7 @@ $window.FindName("StartBtn").Add_Click({
                 }
             } else {
                 Append-Log "[ERROR] No se encontro run.bat"
-                Update-Status "Error: run.bat no encontrado" "#FF6B6B"
+                Update-Status "error_run_bat" "#FF6B6B"
                 return
             }
             
@@ -867,7 +994,7 @@ $window.FindName("StartBtn").Add_Click({
                                             if ($trimmed -match "(\S+\.gl\.joinmc\.link)\s*=>.*minecraft-java") {
                                                 $script:playitMinecraftIP = $matches[1]
                                                 $window.FindName("PlayitMinecraftIP").Text = $script:playitMinecraftIP
-                                                $window.FindName("PlayitStatus").Text = "IPs detectadas correctamente"
+                                                $window.FindName("PlayitStatus").Text = Get-Text 'ips_detected_success'
                                                 $window.FindName("PlayitStatus").Foreground = "#4CAF50"
                                             }
                                             # Voicechat UDP: buscar puerto antes del =>
@@ -901,6 +1028,36 @@ $window.FindName("StartBtn").Add_Click({
                                 if ($trimmed) {
                                     Append-Log "[Server] $trimmed"
                                     
+                                    # Detectar Flag 1: "Preparing level"
+                                    if ($trimmed -match "Preparing level" -and -not $script:serverLoadFlag1) {
+                                        $script:serverLoadFlag1 = $true
+                                        $script:serverLoadStartTime = Get-Date
+                                        Append-Log "[Server] FLAG 1 DETECTED: Server preparing level (starting to load)"
+                                    }
+                                    
+                                    # Detectar Flag 2: "Dedicated server took X seconds to load"
+                                    if ($trimmed -match "Dedicated server took.*seconds to load" -and -not $script:serverLoadFlag2) {
+                                        $script:serverLoadFlag2 = $true
+                                        Append-Log "[Server] FLAG 2 DETECTED: Server fully loaded"
+                                        # Ambas flags detectadas - servidor completamente listo
+                                        if ($script:serverLoadFlag1 -and $script:serverLoadFlag2) {
+                                            $script:serverFullyLoaded = $true
+                                            Update-Status "server_ready_join" "#4CAF50"
+                                            Append-Log "[Server] SERVER FULLY LOADED - Auto-Shutdown and Operating Hours now active"
+                                        }
+                                    }
+                                    
+                                    # Timeout: si pasaron 30 segundos desde flag 1, forzar flag 2
+                                    if ($script:serverLoadFlag1 -and -not $script:serverLoadFlag2 -and $script:serverLoadStartTime) {
+                                        $elapsed = (Get-Date) - $script:serverLoadStartTime
+                                        if ($elapsed.TotalSeconds -ge 30) {
+                                            $script:serverLoadFlag2 = $true
+                                            Append-Log "[Server] FLAG 2 TIMEOUT: 30s passed, auto-enabling server as fully loaded"
+                                            $script:serverFullyLoaded = $true
+                                            Update-Status "server_ready_join" "#4CAF50"
+                                        }
+                                    }
+                                    
                                     # Detectar jugadores
                                     if ($trimmed -match "(\w+)\s+(joined the game|se unio al juego)") {
                                         $playerName = $matches[1]
@@ -914,12 +1071,46 @@ $window.FindName("StartBtn").Add_Click({
                                         $script:onlinePlayers = $script:onlinePlayers | Where-Object { $_ -ne $playerName }
                                         Update-PlayerList
                                     }
+                                    
+                                    # Actualizar tiempo de último jugador visto
+                                    if ($script:onlinePlayers.Count -gt 0) {
+                                        $script:lastPlayerSeenTime = Get-Date
+                                    }
                                 }
                             }
                             $script:serverLastLine = $lines.Count
                         }
                     }
                     catch { }
+                }
+                
+                # Auto-Shutdown por inactividad (solo después de que servidor está completamente cargado)
+                if ($script:serverFullyLoaded -and $script:autoShutdownEnabled -and $script:serverState -eq "running") {
+                    if ($script:onlinePlayers.Count -eq 0) {
+                        # No hay jugadores - comprobar inactividad
+                        if ($null -eq $script:lastPlayerSeenTime) {
+                            $script:lastPlayerSeenTime = Get-Date
+                        }
+                        
+                        $minutesSinceLastPlayer = ((Get-Date) - $script:lastPlayerSeenTime).TotalMinutes
+                        if ($minutesSinceLastPlayer -ge $script:autoShutdownMinutes) {
+                            # Verificar horarios ANTES de apagar (en caso de que se hayan actualizado)
+                            if (-not ($script:onlyShutdownOutsideHours -and (Test-IsWithinOperatingHours))) {
+                                Append-Log "[Auto-Shutdown] Servidor inactivo por $($script:autoShutdownMinutes) minutos - apagando"
+                                
+                                # Llamar a StopBtn logic
+                                $stopBtn = $window.FindName("StopBtn")
+                                if ($stopBtn -and $stopBtn.IsEnabled) {
+                                    $stopBtn.RaiseEvent([System.Windows.RoutedEventArgs]::new([System.Windows.Controls.Button]::ClickEvent))
+                                }
+                            } else {
+                                Append-Log "[Auto-Shutdown] Dentro de horarios de operacion - no se apaga"
+                            }
+                        }
+                    } else {
+                        # Hay jugadores - resetear el timer
+                        $script:lastPlayerSeenTime = Get-Date
+                    }
                 }
                 
                 # Verificar si el servidor sigue corriendo
@@ -930,13 +1121,20 @@ $window.FindName("StartBtn").Add_Click({
             })
             $script:logTimer.Start()
             
-            Update-Status "Servidor en ejecucion" "#4CAF50"
+            # Resetear flags de carga del servidor
+            $script:serverFullyLoaded = $false
+            $script:serverLoadFlag1 = $false
+            $script:serverLoadFlag2 = $false
+            $script:serverLoadStartTime = $null
+            $script:lastPlayerSeenTime = $null  # Resetear inactividad timer
+            
+            Update-Status "server_running" "#4CAF50"
             Append-Log "[Sistema] Todos los servicios iniciados correctamente"
             Set-ControlState "running"
         }
         catch {
             Append-Log "[ERROR] Error al iniciar: $_"
-            Update-Status "Error al iniciar" "#FF6B6B"
+            Update-Status "error_starting" "#FF6B6B"
             Set-ControlState "idle"
         }
     } else {
@@ -948,9 +1146,22 @@ $window.FindName("StartBtn").Add_Click({
 # Botón: Detener
 $window.FindName("StopBtn").Add_Click({
     if ($script:serverState -ne "running") { Append-Log "[Sistema] No esta en ejecucion"; return }
+    
+    # Check if only shutdown outside operating hours and we're currently within them
+    if ($script:onlyShutdownOutsideHours -and (Test-IsWithinOperatingHours)) {
+        $now = Get-Date -Format "HH:mm:ss"
+        Append-Log "[Sistema] Cannot shutdown during operating hours ($now). Disabled to prevent interruption."
+        [System.Windows.MessageBox]::Show($window, 
+            (Get-Text 'cannot_shutdown_during_hours'),
+            (Get-Text 'warning'),
+            [System.Windows.MessageBoxButton]::OK,
+            [System.Windows.MessageBoxImage]::Warning)
+        return
+    }
+    
     if ($script:serverManager) {
         Set-ControlState "stopping"
-        Update-Status "Deteniendo..." "#FFB74D"
+        Update-Status "stopping" "#FFB74D"
         Append-Log "[Sistema] Deteniendo todos los servicios..."
         try {
             # Señal de parada
@@ -998,7 +1209,7 @@ $window.FindName("StopBtn").Add_Click({
                 if ($script:stopWaitTime -ge 90) {
                     $script:stopTimer.Stop()
                     Append-Log "[Server] Sigue en ejecucion tras 90s. No se forzo para evitar corrupcion. Usa 'Terminar' si es necesario."
-                    Update-Status "Servidor aun en ejecucion" "#FFB74D"
+                    Update-Status "still_running" "#FFB74D"
                     Set-ControlState "running"
                 }
             })
@@ -1030,7 +1241,7 @@ $window.FindName("KillProcessBtn").Add_Click({
     if ($script:serverManager) {
         $script:serverManager.IsRunning = $false
     }
-    Update-Status "Procesos terminados" "#FF6B6B"
+    Update-Status "processes_killed" "#FF6B6B"
     Set-ControlState "idle"
 })
 
@@ -1042,7 +1253,7 @@ $window.FindName("RestoreBackupBtn").Add_Click({
             $actualBackup = $script:backupNameMap[$selectedDisplay]
             if ($actualBackup) {
                 Append-Log "[Backup] Restaurando backup: $selectedDisplay"
-                Update-Status "Restaurando..." "#FFB74D"
+                Update-Status "restoring" "#FFB74D"
                 try {
                     # Asegurar que BackupManager tiene la info del servidor
                     $script:backupManager.CurrentServerName = $script:serverManager.ServerName
@@ -1051,15 +1262,15 @@ $window.FindName("RestoreBackupBtn").Add_Click({
                     $result = $script:backupManager.RestoreBackup($actualBackup)
                     if ($result) {
                             Append-Log "[Backup] Restauracion completada"
-                        Update-Status "Backup restaurado" "#4CAF50"
+                        Update-Status "backup_restored" "#4CAF50"
                     } else {
                         Append-Log "[ERROR] Fallo la restauracion"
-                        Update-Status "Error al restaurar" "#FF6B6B"
+                        Update-Status "error_restoring" "#FF6B6B"
                     }
                 }
                 catch {
                     Append-Log "[ERROR] $_"
-                    Update-Status "Error al restaurar" "#FF6B6B"
+                    Update-Status "error_restoring" "#FF6B6B"
                 }
             }
         } else {
@@ -1082,27 +1293,83 @@ $window.FindName("SaveConfigBtn").Add_Click({
         if ([string]::IsNullOrEmpty($idleText)) { $idleText = "30" }
         $script:autoShutdownMinutes = [int]$idleText
         
-        # Horarios
-        $startH = [int]$window.FindName("StartHourBox").Text
-        $startM = [int]$window.FindName("StartMinBox").Text
-        $stopH = [int]$window.FindName("StopHourBox").Text
-        $stopM = [int]$window.FindName("StopMinBox").Text
+        # Shutdown PC option
+        $shutdownPCCheck = $window.FindName("ShutdownPCCheck")
+        if ($shutdownPCCheck) {
+            $script:shutdownPCAfterServer = $shutdownPCCheck.IsChecked
+        }
         
-        if ($script:scheduleManager) {
+        # Only shutdown outside operating hours
+        $onlyShutdownOutsideCheck = $window.FindName("OnlyShutdownOutsideHoursCheck")
+        if ($onlyShutdownOutsideCheck) {
+            $script:onlyShutdownOutsideHours = $onlyShutdownOutsideCheck.IsChecked
+        }
+        
+        # Console logging
+        $enableLoggingCheck = $window.FindName("EnableConsoleLoggingCheck")
+        if ($enableLoggingCheck) {
+            $script:enableConsoleLogging = $enableLoggingCheck.IsChecked
+            # Create logs directory if logging is enabled
+            if ($script:enableConsoleLogging) {
+                $logsPath = Split-Path $script:consoleLogsDir -Parent
+                if (-not (Test-Path $logsPath)) {
+                    New-Item -ItemType Directory -Path $logsPath -Force | Out-Null
+                }
+            }
+        }
+        
+        # Operating Hours validation and save
+        $enableHoursCheck = $window.FindName("EnableOperatingHoursCheck")
+        if ($enableHoursCheck) {
+            $script:enableOperatingHours = $enableHoursCheck.IsChecked
+        }
+        
+        # Horarios con validacion
+        $startHText = $window.FindName("StartHourBox").Text
+        $startMText = $window.FindName("StartMinBox").Text
+        $stopHText = $window.FindName("StopHourBox").Text
+        $stopMText = $window.FindName("StopMinBox").Text
+        
+        # Validar y limitar valores
+        if (-not [int]::TryParse($startHText, [ref]$null)) { $startHText = "08" }
+        if (-not [int]::TryParse($startMText, [ref]$null)) { $startMText = "00" }
+        if (-not [int]::TryParse($stopHText, [ref]$null)) { $stopHText = "23" }
+        if (-not [int]::TryParse($stopMText, [ref]$null)) { $stopMText = "30" }
+        
+        $startH = [Math]::Max(0, [Math]::Min(23, [int]$startHText))
+        $startM = [Math]::Max(0, [Math]::Min(59, [int]$startMText))
+        $stopH = [Math]::Max(0, [Math]::Min(23, [int]$stopHText))
+        $stopM = [Math]::Max(0, [Math]::Min(59, [int]$stopMText))
+        
+        # Actualizar textboxes con valores validados
+        $window.FindName("StartHourBox").Text = $startH.ToString().PadLeft(2, '0')
+        $window.FindName("StartMinBox").Text = $startM.ToString().PadLeft(2, '0')
+        $window.FindName("StopHourBox").Text = $stopH.ToString().PadLeft(2, '0')
+        $window.FindName("StopMinBox").Text = $stopM.ToString().PadLeft(2, '0')
+        
+        # Guardar en variables globales para que se usen en auto-shutdown
+        $script:startHourSaved = $startH
+        $script:startMinSaved = $startM
+        $script:stopHourSaved = $stopH
+        $script:stopMinSaved = $stopM
+        
+        if ($script:enableOperatingHours -and $script:scheduleManager) {
             try {
                 $script:scheduleManager.SetOperatingHours($startH, $startM, $stopH, $stopM)
-                Append-Log "[Config] Horarios guardados: ${startH}:${startM} - ${stopH}:${stopM}"
+                Append-Log "[Config] Operating hours saved: ${startH}:${startM} - ${stopH}:${stopM}"
             } catch {
-                Append-Log "[Config] Error guardando horarios: $_"
+                Append-Log "[Config] Error saving hours: $_"
             }
             
             $bootCheck = $window.FindName("StartOnBootCheck")
             if ($bootCheck -and $bootCheck.IsChecked) {
                 try {
                     $script:scheduleManager.EnableBootAutoStart()
-                    Append-Log "[Config] Inicio automatico habilitado"
+                    Append-Log "[Config] Boot autostart enabled"
                 } catch { }
             }
+        } else {
+            Append-Log "[Config] Operating hours disabled (24/7 mode)"
         }
         
         # Auto-Backup
@@ -1133,9 +1400,16 @@ $window.FindName("SaveConfigBtn").Add_Click({
         } catch { }
 
         Append-Log "[$(Get-Text 'config')] $(Get-Text 'config_saved')"
-        Append-Log "[Config] Auto-Shutdown: $script:autoShutdownEnabled ($script:autoShutdownMinutes $(Get-Text 'min_short'))"
-        Append-Log "[Config] Auto-Backup: $script:autoBackupEnabled ($script:backupIntervalMinutes $(Get-Text 'min_short'))"
-        Append-Log "[Config] Auto-Clear: $script:autoClearEnabled ($(Get-Text 'min_short') $script:autoClearMinutes, $(Get-Text 'lines_short') $script:autoClearMaxLines)"
+        Append-Log "[Config] Auto-Shutdown on idle: $script:autoShutdownEnabled ($script:autoShutdownMinutes min)"
+        Append-Log "[Config] Shutdown PC after server: $script:shutdownPCAfterServer"
+        Append-Log "[Config] Only shutdown outside hours: $script:onlyShutdownOutsideHours"
+        Append-Log "[Config] Console Logging: $script:enableConsoleLogging"
+        Append-Log "[Config] Operating Hours Enabled: $script:enableOperatingHours"
+        Append-Log "[Config] Auto-Backup: $script:autoBackupEnabled ($script:backupIntervalMinutes min)"
+        Append-Log "[Config] Auto-Clear: $script:autoClearEnabled"
+        
+        # Guardar configuración a archivo
+        Save-Configuration
         
         [System.Windows.MessageBox]::Show($window, (Get-Text 'config_saved_msg'), (Get-Text 'success'),
             [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
@@ -1166,6 +1440,10 @@ if (Test-Path $script:languageConfigPath) {
         }
     } catch { }
 }
+
+# Actualizar UI con el idioma cargado ANTES de cargar el servidor
+Update-UILanguage
+
 $langCombo = $window.FindName("LanguageSelect")
 if ($langCombo) {
     foreach ($item in $langCombo.Items) {
@@ -1184,10 +1462,95 @@ if ($langCombo) {
     })
 }
 
-# Actualizar idioma de la interfaz
-Update-UILanguage
-
 # Cargar ultimo servidor
+# Función para guardar configuración
+function Save-Configuration {
+    try {
+        # Leer valores actuales de los textboxes si existen
+        $sHour = $script:scheduleManager.StartHour
+        $sMin = $script:scheduleManager.StartMin
+        $eHour = $script:scheduleManager.StopHour
+        $eMin = $script:scheduleManager.StopMin
+        
+        try {
+            $shBox = $window.FindName("StartHourBox").Text
+            if ($shBox -and [int]::TryParse($shBox, [ref]$null)) { $sHour = [int]$shBox }
+        } catch { }
+        
+        try {
+            $smBox = $window.FindName("StartMinBox").Text
+            if ($smBox -and [int]::TryParse($smBox, [ref]$null)) { $sMin = [int]$smBox }
+        } catch { }
+        
+        try {
+            $ehBox = $window.FindName("StopHourBox").Text
+            if ($ehBox -and [int]::TryParse($ehBox, [ref]$null)) { $eHour = [int]$ehBox }
+        } catch { }
+        
+        try {
+            $emBox = $window.FindName("StopMinBox").Text
+            if ($emBox -and [int]::TryParse($emBox, [ref]$null)) { $eMin = [int]$emBox }
+        } catch { }
+        
+        $config = @{
+            serverPath = $script:serverPath
+            playitPath = $script:playitPath
+            autoShutdownEnabled = $script:autoShutdownEnabled
+            autoShutdownMinutes = $script:autoShutdownMinutes
+            shutdownPCAfterServer = $script:shutdownPCAfterServer
+            onlyShutdownOutsideHours = $script:onlyShutdownOutsideHours
+            enableOperatingHours = $script:enableOperatingHours
+            startHour = $sHour
+            startMin = $sMin
+            stopHour = $eHour
+            stopMin = $eMin
+            startOnBoot = $script:startOnBoot
+            autoBackupEnabled = $script:autoBackupEnabled
+            backupIntervalMinutes = $script:backupIntervalMinutes
+            autoClearEnabled = $script:autoClearEnabled
+            autoClearMinutes = $script:autoClearMinutes
+            autoClearMaxLines = $script:autoClearMaxLines
+            enableConsoleLogging = $script:enableConsoleLogging
+        }
+        
+        $dir = Split-Path $script:settingsConfigPath -Parent
+        if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+        $config | ConvertTo-Json | Set-Content -Path $script:settingsConfigPath -Encoding UTF8 -ErrorAction SilentlyContinue
+    } catch { }
+}
+
+# Función para cargar configuración
+function Load-Configuration {
+    try {
+        if (Test-Path $script:settingsConfigPath) {
+            $config = Get-Content -Path $script:settingsConfigPath -Raw -ErrorAction SilentlyContinue | ConvertFrom-Json
+            
+            if ($config.serverPath) { $script:serverPath = $config.serverPath }
+            if ($config.playitPath) { $script:playitPath = $config.playitPath }
+            if ($config.autoShutdownEnabled -ne $null) { $script:autoShutdownEnabled = $config.autoShutdownEnabled }
+            if ($config.autoShutdownMinutes) { $script:autoShutdownMinutes = $config.autoShutdownMinutes }
+            if ($config.shutdownPCAfterServer -ne $null) { $script:shutdownPCAfterServer = $config.shutdownPCAfterServer }
+            if ($config.onlyShutdownOutsideHours -ne $null) { $script:onlyShutdownOutsideHours = $config.onlyShutdownOutsideHours }
+            if ($config.enableOperatingHours -ne $null) { $script:enableOperatingHours = $config.enableOperatingHours }
+            if ($config.startHour -ne $null) { $script:startHourSaved = $config.startHour }
+            if ($config.startMin -ne $null) { $script:startMinSaved = $config.startMin }
+            if ($config.stopHour -ne $null) { $script:stopHourSaved = $config.stopHour }
+            if ($config.stopMin -ne $null) { $script:stopMinSaved = $config.stopMin }
+            if ($config.startHour -ne $null -and $script:scheduleManager) { $script:scheduleManager.StartHour = $config.startHour }
+            if ($config.startMin -ne $null -and $script:scheduleManager) { $script:scheduleManager.StartMin = $config.startMin }
+            if ($config.stopHour -ne $null -and $script:scheduleManager) { $script:scheduleManager.StopHour = $config.stopHour }
+            if ($config.stopMin -ne $null -and $script:scheduleManager) { $script:scheduleManager.StopMin = $config.stopMin }
+            if ($config.startOnBoot -ne $null) { $script:startOnBoot = $config.startOnBoot }
+            if ($config.autoBackupEnabled -ne $null) { $script:autoBackupEnabled = $config.autoBackupEnabled }
+            if ($config.backupIntervalMinutes) { $script:backupIntervalMinutes = $config.backupIntervalMinutes }
+            if ($config.autoClearEnabled -ne $null) { $script:autoClearEnabled = $config.autoClearEnabled }
+            if ($config.autoClearMinutes) { $script:autoClearMinutes = $config.autoClearMinutes }
+            if ($config.autoClearMaxLines) { $script:autoClearMaxLines = $config.autoClearMaxLines }
+            if ($config.enableConsoleLogging -ne $null) { $script:enableConsoleLogging = $config.enableConsoleLogging }
+        }
+    } catch { }
+}
+
 if (Test-Path $script:lastServerConfigPath) {
     try {
         $lastPath = Get-Content -Path $script:lastServerConfigPath -Raw -ErrorAction SilentlyContinue
@@ -1197,6 +1560,38 @@ if (Test-Path $script:lastServerConfigPath) {
     } catch { }
 }
 
+# Cargar configuración guardada
+Load-Configuration
+
+# Actualizar UI con configuración cargada
+try {
+    if ($script:autoShutdownEnabled) { $window.FindName("AutoShutdownCheck").IsChecked = $true }
+    if ($script:shutdownPCAfterServer) { $window.FindName("ShutdownPCCheck").IsChecked = $true }
+    if ($script:onlyShutdownOutsideHours) { $window.FindName("OnlyShutdownOutsideHoursCheck").IsChecked = $true }
+    if ($script:enableOperatingHours) { $window.FindName("EnableOperatingHoursCheck").IsChecked = $true }
+    if ($script:autoBackupEnabled) { $window.FindName("AutoBackupCheck").IsChecked = $true }
+    if ($script:autoClearEnabled) { $window.FindName("AutoClearCheck").IsChecked = $true }
+    if ($script:enableConsoleLogging) { $window.FindName("EnableConsoleLoggingCheck").IsChecked = $true }
+    if ($script:startOnBoot) { $window.FindName("StartOnBootCheck").IsChecked = $true }
+    
+    # Cargar valores de texto
+    $window.FindName("IdleMinutesBox").Text = $script:autoShutdownMinutes.ToString()
+    $window.FindName("BackupIntervalBox").Text = $script:backupIntervalMinutes.ToString()
+    $window.FindName("AutoClearMinutesBox").Text = $script:autoClearMinutes.ToString()
+    $window.FindName("AutoClearLinesBox").Text = $script:autoClearMaxLines.ToString()
+    
+    # Cargar horarios
+    $window.FindName("StartHourBox").Text = $script:startHourSaved.ToString().PadLeft(2, '0')
+    $window.FindName("StartMinBox").Text = $script:startMinSaved.ToString().PadLeft(2, '0')
+    $window.FindName("StopHourBox").Text = $script:stopHourSaved.ToString().PadLeft(2, '0')
+    $window.FindName("StopMinBox").Text = $script:stopMinSaved.ToString().PadLeft(2, '0')
+    
+    # Cargar rutas de servidores
+    if ($script:serverPath) { $window.FindName("ServerPath").Text = $script:serverPath }
+    if ($script:playitPath) { $window.FindName("PlayitPath").Text = $script:playitPath }
+} catch { }
+
+
 # Mensaje inicial
 Append-Log "[$(Get-Text 'system')] $(Get-Text 'launch_started')"
 Append-Log "[$(Get-Text 'system')] $(Get-Text 'select_to_start')"
@@ -1204,30 +1599,21 @@ Append-Log "[$(Get-Text 'system')] $(Get-Text 'select_to_start')"
 # Event handler para cuando se cierra la ventana
 $window.Add_Closing({
     param($sender, $e)
-    try {
-        # Detener timer si existe
-        if ($script:logTimer) { $script:logTimer.Stop() }
-        if ($script:stopTimer) { $script:stopTimer.Stop() }
-        
-        # Terminar procesos de servidor
-        Get-Process -Name java,javaw -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-        
-        # Terminar PlayIT
-        if ($script:playitProcess -and -not $script:playitProcess.HasExited) {
-            Stop-Process -Id $script:playitProcess.Id -Force -ErrorAction SilentlyContinue
-        }
-        Get-Process -Name playit -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
-        
-        # Terminar cmd/powershell si quedaron
-        if ($script:cmdProcess -and -not $script:cmdProcess.HasExited) {
-            Stop-Process -Id $script:cmdProcess.Id -Force -ErrorAction SilentlyContinue
-        }
-        
-        # Limpiar logs temporales
-        Remove-Item $script:playitLog -ErrorAction SilentlyContinue
-        Remove-Item $script:playitErrLog -ErrorAction SilentlyContinue
-        Remove-Item $script:serverLog -ErrorAction SilentlyContinue
-    } catch { }
+    # Cierre ultra-rápido sin esperas
+    try { Save-Configuration } catch { }
+    try { if ($script:logTimer) { $script:logTimer.Stop(); $script:logTimer.Dispose() } } catch { }
+    try { if ($script:stopTimer) { $script:stopTimer.Stop(); $script:stopTimer.Dispose() } } catch { }
+    try { Remove-Item $script:playitLog -ErrorAction SilentlyContinue -Force } catch { }
+    try { Remove-Item $script:playitErrLog -ErrorAction SilentlyContinue -Force } catch { }
+    try { Remove-Item $script:serverLog -ErrorAction SilentlyContinue -Force } catch { }
+    try { if ($script:serverProcess -and -not $script:serverProcess.HasExited) { $script:serverProcess.Kill($true) } } catch { }
+    try { if ($script:playitProcess -and -not $script:playitProcess.HasExited) { Stop-Process -Id $script:playitProcess.Id -Force -ErrorAction Stop } } catch { }
+    try { Get-Process -Name java,javaw -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue } catch { }
+    try { Get-Process -Name playit -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue } catch { }
+    try { if ($script:cmdProcess -and -not $script:cmdProcess.HasExited) { Stop-Process -Id $script:cmdProcess.Id -Force -ErrorAction Stop } } catch { }
+    try { $script:serverProcess.Dispose() } catch { }
+    try { $script:playitProcess.Dispose() } catch { }
+    [System.Environment]::Exit(0)
 })
 
 # Mostrar ventana

@@ -1,0 +1,20 @@
+﻿{
+    "stopHour":  15,
+    "startMin":  0,
+    "shutdownPCAfterServer":  false,
+    "enableOperatingHours":  false,
+    "autoClearMinutes":  0,
+    "autoClearMaxLines":  500,
+    "serverPath":  null,
+    "autoShutdownEnabled":  false,
+    "backupIntervalMinutes":  60,
+    "enableConsoleLogging":  false,
+    "autoShutdownMinutes":  1,
+    "startOnBoot":  null,
+    "autoClearEnabled":  false,
+    "autoBackupEnabled":  false,
+    "stopMin":  10,
+    "playitPath":  null,
+    "onlyShutdownOutsideHours":  true,
+    "startHour":  8
+}

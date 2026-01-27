@@ -81,12 +81,18 @@ Manage your server's public IPs for remote access.
 Customize ServerLaunch behavior.
 
 #### Auto-Shutdown
-- **Enable**: Automatically stop server after idle time
-- **Idle minutes**: Minutes without players before shutdown
+- **Enable**: Automatically stop server when idle (no players for X minutes)
+- **Idle minutes**: Number of minutes without players before server stops
+- **Shutdown PC**: Optional - automatically shutdown your computer after server closes
+- **Only shutdown outside operating hours**: Prevents auto-shutdown during your configured operating hours (prevents interruption during playtime)
+
+Example: If set to 30 minutes with "Only shutdown outside hours" enabled, the server will stop if no one is playing for 30 minutes, but ONLY between 23:00-08:00 (if those are your off-hours).
 
 #### Operating Hours
-- **Start server on PC boot**: Auto-start server on boot
-- **Start time / End time**: Operating hours (server starts/stops automatically)
+- **Enable Operating Hours**: Check to enable scheduled operation. If disabled, server runs 24/7 until you manually stop it
+- **Start server on PC boot**: Auto-start server when Windows starts
+- **Start time / End time**: When enabled, server automatically starts at start time and stops at end time
+- **Input limits**: Hours (0-23), Minutes (0-59) - invalid values are automatically corrected
 
 #### Auto-Backup
 - **Enable**: Create periodic backups while server is running
@@ -96,6 +102,7 @@ Customize ServerLaunch behavior.
 - **Auto-clear console**: Auto-clear console logs
 - **Every (min)**: Clear interval in minutes
 - **Line limit**: Maximum console lines before auto-clear
+- **Enable console logging**: Records all console messages to timestamped log files in the `logs/` folder for debugging and monitoring
 
 #### Language
 - **Spanish / English**: Change interface language
@@ -198,6 +205,24 @@ Your support helps me maintain and improve ServerLaunch with new features!
 ---
 
 ## 📋 Changelog
+
+### Version 2.1
+- ✅ **Shutdown PC Option**: New option to shutdown computer after server closes
+- ✅ **Operating Hours Toggle**: Enable/disable scheduled hours (24/7 mode when disabled)
+- ✅ **Operating Hours Priority**: Prevent auto-shutdown during configured operating hours (don't interrupt playtime)
+- ✅ **Auto-Shutdown on Inactivity**: Configurable idle timeout (X minutes without players)
+- ✅ **Console Logging**: Optional console logging to files for debugging and monitoring
+- ✅ **Server Load Detection**: 2-flag system detects when server is fully loaded (30-second timeout fallback)
+- ✅ **Multi-Language UI**: Complete Spanish/English translation support with persistent language preference
+- ✅ **Persistent Configuration**: Settings saved to JSON (auto-shutdown, operating hours, intervals, language, etc.)
+- ✅ **PlayIT Optional**: LAN-only mode when PlayIT path not configured (no forced dependency)
+- ✅ **Real-Time Status Updates**: Status changes translate correctly when switching languages
+- ✅ **Player Count Updates**: Players Online list updates with correct language translations
+- ✅ **Input Validation**: Hours and minutes automatically limited to valid ranges (0-23 and 0-59)
+- ✅ **Optimized Shutdown**: Fast application close without hanging processes
+- ✅ **Enhanced Console**: Real-time timestamped logging to files with auto-clear options
+- ✅ **Better Explanations**: Added helpful text for each feature
+- ✅ **24/7 Mode**: Server runs continuously when operating hours are disabled
 
 ### Version 2.0
 - ✅ Complete UI overhaul with tabbed interface
