@@ -207,7 +207,7 @@ Your support helps me maintain and improve ServerLaunch with new features!
 ## 📋 Changelog
 
 ### Version 2.1
-- ✅ **Shutdown PC Option**: New option to shutdown computer after server closes
+- ✅ **Shutdown PC Option**: Properly shutdown computer after server closes using Windows shutdown command
 - ✅ **Operating Hours Toggle**: Enable/disable scheduled hours (24/7 mode when disabled)
 - ✅ **Operating Hours Priority**: Prevent auto-shutdown during configured operating hours (don't interrupt playtime)
 - ✅ **Auto-Shutdown on Inactivity**: Configurable idle timeout (X minutes without players)

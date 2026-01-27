@@ -236,6 +236,8 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <TextBlock x:Name="LblAutoBackup" Text="Auto-Backup" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
                         <CheckBox x:Name="AutoBackupCheck" Content="Activar backup automatico periodico" 
                                   Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="BackupBeforeCloseCheck" Content="Hacer backup antes de cerrar el servidor" 
+                                  Foreground="White" Margin="0,0,0,10" FontSize="12"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <TextBlock x:Name="LblIntervalMin" Text="Intervalo (min):" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="12"/>
                             <TextBox x:Name="BackupIntervalBox" Width="80" Height="30" Padding="8" 
@@ -313,6 +315,7 @@ $script:stopHourSaved = 23
 $script:stopMinSaved = 30
 $script:consoleLogsDir = Join-Path $scriptPath "logs"
 $script:autoBackupEnabled = $false
+$script:backupBeforeCloseEnabled = $false
 $script:backupIntervalMinutes = 60
 $script:autoClearEnabled = $false
 $script:autoClearMinutes = 0
@@ -352,6 +355,7 @@ $script:translations = @{
         enable_operating_hours = "Activar horarios de operacion (24/7 si esta deshabilitado)"; operating_hours = "Horarios de Operacion"
         start_on_boot = "Iniciar servidor al encender PC"; start_time = "Hora inicio:"
         end_time = "Hora fin:"; auto_backup = "Auto-Backup"; enable_auto_backup = "Activar backup automatico periodico"
+        backup_before_close = "Hacer backup antes de cerrar el servidor"
         interval_min = "Intervalo (min):"; console_settings = "Consola"; auto_clear = "Limpiar consola automatico"
         every_min = "Cada (min):"; line_limit = "Limite lineas:"; language = "Idioma"
         save_config = "Guardar Configuracion"; select_server = "Selecciona un servidor primero"
@@ -410,6 +414,7 @@ $script:translations = @{
         enable_operating_hours = "Enable operating hours (24/7 if disabled)"; operating_hours = "Operating Hours"
         start_on_boot = "Start server on PC boot"; start_time = "Start time:"
         end_time = "End time:"; auto_backup = "Auto-Backup"; enable_auto_backup = "Enable automatic periodic backup"
+        backup_before_close = "Backup before closing server"
         interval_min = "Interval (min):"; console_settings = "Console"; auto_clear = "Auto-clear console"
         every_min = "Every (min):"; line_limit = "Line limit:"; language = "Language"
         save_config = "Save Settings"; select_server = "Select a server first"
@@ -489,6 +494,7 @@ function Update-UILanguage {
     $window.FindName("EnableOperatingHoursCheck").Content = Get-Text 'enable_operating_hours'
     $window.FindName("StartOnBootCheck").Content = Get-Text 'start_on_boot'
     $window.FindName("AutoBackupCheck").Content = Get-Text 'enable_auto_backup'
+    $window.FindName("BackupBeforeCloseCheck").Content = Get-Text 'backup_before_close'
     $window.FindName("EnableConsoleLoggingCheck").Content = Get-Text 'enable_console_logging'
     $window.FindName("AutoClearCheck").Content = Get-Text 'auto_clear'
     
@@ -650,6 +656,23 @@ function Cleanup-AfterServerStopped {
     Update-Status "server_stopped_status" "#FF6B6B"
     Append-Log "[Sistema] Todos los servicios detenidos correctamente"
     Set-ControlState "idle"
+    
+    # Backup before close if enabled
+    if ($script:backupBeforeCloseEnabled -and $script:backupManager) {
+        try {
+            Append-Log "[Backup] Realizando backup antes de cerrar..."
+            $script:backupManager.RunBackup()
+            Append-Log "[Backup] Backup completado antes de cerrar"
+        } catch {
+            Append-Log "[Backup][ERROR] Error al realizar backup antes de cerrar: $_"
+        }
+    }
+    
+    # Shutdown PC if enabled
+    if ($script:shutdownPCAfterServer) {
+        Append-Log "[Sistema] Apagando computadora..."
+        cmd /c "shutdown /s /f /t 0"
+    }
 }
 
 # Funciones auxiliares
@@ -901,10 +924,19 @@ $window.FindName("StartBtn").Add_Click({
             New-Item -ItemType File -Path $script:playitErrLog -Force -ErrorAction SilentlyContinue | Out-Null
             New-Item -ItemType File -Path $script:serverLog -Force -ErrorAction SilentlyContinue | Out-Null
             
-            # Iniciar PlayIT primero (solo si se configuró una ruta)
-            if ($script:playitPath -and (Test-Path $script:playitPath)) {
+            # Iniciar PlayIT primero (solo si se configuró una ruta o existe la ruta por defecto)
+            $playitToUse = $script:playitPath
+            if (-not $playitToUse -or -not (Test-Path $playitToUse)) {
+                # Intentar ruta por defecto si no está configurada
+                $defaultPlayitPath = "C:\Program Files\playit_gg\bin\playit.exe"
+                if (Test-Path $defaultPlayitPath) {
+                    $playitToUse = $defaultPlayitPath
+                }
+            }
+            
+            if ($playitToUse -and (Test-Path $playitToUse)) {
                 try {
-                    $script:playitProcess = Start-Process -FilePath $script:playitPath `
+                    $script:playitProcess = Start-Process -FilePath $playitToUse `
                         -WindowStyle Hidden `
                         -RedirectStandardOutput $script:playitLog `
                         -RedirectStandardError $script:playitErrLog `
@@ -1381,6 +1413,18 @@ $window.FindName("SaveConfigBtn").Add_Click({
         if ([string]::IsNullOrEmpty($backupText)) { $backupText = "60" }
         $script:backupIntervalMinutes = [int]$backupText
         
+        # Backup Before Close
+        $backupBeforeCloseCheck = $window.FindName("BackupBeforeCloseCheck")
+        if ($backupBeforeCloseCheck) {
+            $script:backupBeforeCloseEnabled = $backupBeforeCloseCheck.IsChecked
+        }
+        
+        # Backup Before Close
+        $backupBeforeCloseCheck = $window.FindName("BackupBeforeCloseCheck")
+        if ($backupBeforeCloseCheck) {
+            $script:backupBeforeCloseEnabled = $backupBeforeCloseCheck.IsChecked
+        }
+        
         # Auto Clear
         $autoClearCheck = $window.FindName("AutoClearCheck")
         if ($autoClearCheck) { $script:autoClearEnabled = $autoClearCheck.IsChecked }
@@ -1507,6 +1551,7 @@ function Save-Configuration {
             startOnBoot = $script:startOnBoot
             autoBackupEnabled = $script:autoBackupEnabled
             backupIntervalMinutes = $script:backupIntervalMinutes
+            backupBeforeCloseEnabled = $script:backupBeforeCloseEnabled
             autoClearEnabled = $script:autoClearEnabled
             autoClearMinutes = $script:autoClearMinutes
             autoClearMaxLines = $script:autoClearMaxLines
@@ -1527,6 +1572,7 @@ function Load-Configuration {
             
             if ($config.serverPath) { $script:serverPath = $config.serverPath }
             if ($config.playitPath) { $script:playitPath = $config.playitPath }
+            if ($null -ne $config.backupBeforeCloseEnabled) { $script:backupBeforeCloseEnabled = $config.backupBeforeCloseEnabled }
             if ($config.autoShutdownEnabled -ne $null) { $script:autoShutdownEnabled = $config.autoShutdownEnabled }
             if ($config.autoShutdownMinutes) { $script:autoShutdownMinutes = $config.autoShutdownMinutes }
             if ($config.shutdownPCAfterServer -ne $null) { $script:shutdownPCAfterServer = $config.shutdownPCAfterServer }
@@ -1570,6 +1616,7 @@ try {
     if ($script:onlyShutdownOutsideHours) { $window.FindName("OnlyShutdownOutsideHoursCheck").IsChecked = $true }
     if ($script:enableOperatingHours) { $window.FindName("EnableOperatingHoursCheck").IsChecked = $true }
     if ($script:autoBackupEnabled) { $window.FindName("AutoBackupCheck").IsChecked = $true }
+    if ($script:backupBeforeCloseEnabled) { $window.FindName("BackupBeforeCloseCheck").IsChecked = $true }
     if ($script:autoClearEnabled) { $window.FindName("AutoClearCheck").IsChecked = $true }
     if ($script:enableConsoleLogging) { $window.FindName("EnableConsoleLoggingCheck").IsChecked = $true }
     if ($script:startOnBoot) { $window.FindName("StartOnBootCheck").IsChecked = $true }
