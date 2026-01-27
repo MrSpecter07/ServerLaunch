@@ -1,0 +1,18 @@
+# Logs y archivos temporales
+logs/
+*.log
+*.tmp
+
+# Configuración local
+config/last_server.txt
+config/language.txt
+
+# Backups (demasiado pesados para git)
+backups/
+
+# Archivos de Windows
+Thumbs.db
+desktop.ini
+
+# PowerShell
+*.ps1~
