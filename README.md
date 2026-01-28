@@ -1,4 +1,4 @@
-# 🚀 ServerLaunch v2.0
+# 🚀 ServerLaunch v2.2
 
 **Universal Minecraft Server Manager with Graphical Interface**
 
@@ -75,6 +75,47 @@ Manage your server's public IPs for remote access.
 - **Copy Buttons**: Click to copy IPs to clipboard
 - **Open PlayIT Panel**: Open PlayIT web dashboard
 - **Status**: PlayIT connection status
+
+### 🖥️ Server Settings Tab
+
+Direct control over your `server.properties` file without manual editing.
+
+#### Basic Settings
+- **MOTD**: Message of the Day displayed in server list
+- **Max Players**: Maximum number of simultaneous players
+- **View Distance**: Render distance for players (in chunks)
+- **Simulation Distance**: Distance for mob/entity simulation
+- **Spawn Protection**: Radius (in blocks) around spawn protected from non-ops
+- **Player Idle Timeout**: Minutes before kicking idle players (0 = disabled)
+
+#### World Settings
+- **Level Name**: World folder name
+- **Level Seed**: World generation seed (leave empty for random)
+- **Level Type**: World type (normal, flat, large_biomes, amplified)
+- **Gamemode**: Default gamemode (survival, creative, adventure, spectator)
+- **Difficulty**: World difficulty (peaceful, easy, normal, hard)
+- **Max Tick Time**: Maximum milliseconds server waits for world tick
+- **Max World Size**: Maximum world radius (in blocks)
+
+#### Security & Features
+- **Online Mode**: Verify Mojang account authentication (disable for offline/cracked)
+- **Enforce Secure Profile**: Require secure chat profiles
+- **Enable Code of Conduct**: Enforce Minecraft Code of Conduct
+- **Whitelist**: Only allow authorized players
+- **Enforce Whitelist**: Kick non-whitelisted players immediately
+- **Hardcore Mode**: Death = permanent ban
+- **PvP Enabled**: Allow player vs player combat
+- **Force Gamemode**: Force default gamemode on login
+- **Allow Flight**: Allow non-creative flying (for mods)
+- **Hide Online Players**: Hide player list from server list
+- **Accepts Transfers**: Allow player transfers between servers
+- **Generate Structures**: Generate villages, temples, etc.
+- **Sync Chunk Writes**: Synchronous chunk saving (safer but slower)
+- **Log IPs**: Log player IP addresses
+
+**Buttons**:
+- **Save Server Properties**: Apply all changes to `server.properties` (restart server for full effect)
+- **Reload Properties**: Reload current values from `server.properties`
 
 ### ⚙️ Configuracion Tab
 
@@ -205,6 +246,16 @@ Your support helps me maintain and improve ServerLaunch with new features!
 ---
 
 ## 📋 Changelog
+
+### Version 2.2
+- ✅ **Server Settings Tab**: Full GUI control over `server.properties` without manual editing
+- ✅ **Auto-Accept EULA**: Automatically accepts Minecraft EULA when loading a server
+- ✅ **Auto-Create run.bat**: Automatically creates `run.bat` with Java 21 if missing
+- ✅ **Auto-Generate server.properties**: Starts server briefly to generate properties if missing
+- ✅ **Smart Java Process Killing**: Only kills server-specific Java processes (doesn't kill other Java apps)
+- ✅ **Improved Error Handling**: No popup errors for missing files, only status bar messages
+- ✅ **Optimized Property Loading**: Properties load on tab click instead of initial server load
+- ✅ **Enhanced User Experience**: Reload button for manual property refresh
 
 ### Version 2.1
 - ✅ **Shutdown PC Option**: Properly shutdown computer after server closes using Windows shutdown command

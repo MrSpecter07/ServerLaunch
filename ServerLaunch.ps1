@@ -34,7 +34,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
         </Grid>
         
         <!-- TabControl -->
-        <TabControl Grid.Row="1" Background="#1E1E1E" BorderThickness="0" Margin="20,0,20,20">
+        <TabControl x:Name="MainTabControl" Grid.Row="1" Background="#1E1E1E" BorderThickness="0" Margin="20,0,20,20">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Background" Value="#2D2D2D"/>
@@ -171,6 +171,139 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <TextBlock x:Name="LblPlayitStatus" Text="Estado" FontSize="14" FontWeight="Bold" Margin="0,30,0,10" Foreground="#4CAF50"/>
                         <TextBlock x:Name="PlayitStatus" Text="PlayIT no iniciado" FontSize="12" Foreground="#888888" TextWrapping="Wrap"/>
                         
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Tab: Server Settings -->
+            <TabItem x:Name="TabServerSettings" Header="Server Settings">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20">
+                        <!-- Basic Settings -->
+                        <TextBlock x:Name="LblBasicSettings" Text="Configuracion Basica" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
+                        
+                        <TextBlock x:Name="LblMotd" Text="MOTD (Message of the Day):" FontSize="12" Margin="0,0,0,5"/>
+                        <TextBox x:Name="ServerMOTD" Width="550" Height="32" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock x:Name="LblMaxPlayers" Text="Max Players:" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="ServerMaxPlayers" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock x:Name="LblViewDistance" Text="View Distance:" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="ServerViewDistance" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                <TextBlock x:Name="LblSimulationDistance" Text="Simulation Distance:" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="ServerSimulationDistance" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock x:Name="LblSpawnProtection" Text="Spawn Protection:" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="ServerSpawnProtection" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock x:Name="LblPlayerIdleTimeout" Text="Player Idle Timeout:" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="ServerIdleTimeout" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <!-- World Settings -->
+                        <TextBlock x:Name="LblWorldSettings" Text="Configuracion del Mundo" FontSize="14" FontWeight="Bold" Margin="0,15,0,10" Foreground="#4CAF50"/>
+                        
+                        <TextBlock x:Name="LblLevelName" Text="Level Name:" FontSize="12" Margin="0,0,0,5"/>
+                        <TextBox x:Name="ServerLevelName" Width="350" Height="32" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
+                        
+                        <TextBlock x:Name="LblLevelSeed" Text="Level Seed:" FontSize="12" Margin="0,0,0,5"/>
+                        <TextBox x:Name="ServerLevelSeed" Width="350" Height="32" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
+                        
+                        <TextBlock x:Name="LblLevelType" Text="Level Type:" FontSize="12" Margin="0,0,0,5"/>
+                        <ComboBox x:Name="ServerLevelType" Width="250" Height="32" Background="#3C3C3C" Foreground="White" Padding="8" Margin="0,0,0,15" BorderBrush="#555555" BorderThickness="1" HorizontalAlignment="Left">
+                            <ComboBoxItem Content="minecraft:normal" Tag="minecraft:normal"/>
+                            <ComboBoxItem Content="minecraft:flat" Tag="minecraft:flat"/>
+                            <ComboBoxItem Content="minecraft:large_biomes" Tag="minecraft:large_biomes"/>
+                            <ComboBoxItem Content="minecraft:amplified" Tag="minecraft:amplified"/>
+                        </ComboBox>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="250"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock x:Name="LblGamemode" Text="Gamemode:" FontSize="12" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="ServerGamemode" Width="200" Height="32" Background="#3C3C3C" Foreground="White" Padding="8" BorderBrush="#555555" BorderThickness="1">
+                                    <ComboBoxItem Content="survival" Tag="survival"/>
+                                    <ComboBoxItem Content="creative" Tag="creative"/>
+                                    <ComboBoxItem Content="adventure" Tag="adventure"/>
+                                    <ComboBoxItem Content="spectator" Tag="spectator"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock x:Name="LblDifficulty" Text="Difficulty:" FontSize="12" Margin="0,0,0,5"/>
+                                <ComboBox x:Name="ServerDifficulty" Width="200" Height="32" Background="#3C3C3C" Foreground="White" Padding="8" BorderBrush="#555555" BorderThickness="1">
+                                    <ComboBoxItem Content="peaceful" Tag="peaceful"/>
+                                    <ComboBoxItem Content="easy" Tag="easy"/>
+                                    <ComboBoxItem Content="normal" Tag="normal"/>
+                                    <ComboBoxItem Content="hard" Tag="hard"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <Grid Margin="0,0,0,15">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock x:Name="LblMaxTickTime" Text="Max Tick Time:" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="ServerMaxTickTime" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                <TextBlock x:Name="LblMaxWorldSize" Text="Max World Size:" FontSize="12" Margin="0,0,0,5"/>
+                                <TextBox x:Name="ServerMaxWorldSize" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                            </StackPanel>
+                        </Grid>
+                        
+                        <!-- Security & Features -->
+                        <TextBlock x:Name="LblSecuritySettings" Text="Seguridad y Caracteristicas" FontSize="14" FontWeight="Bold" Margin="0,15,0,10" Foreground="#4CAF50"/>
+                        
+                        <CheckBox x:Name="ServerOnlineMode" Content="Online Mode (verificacion de cuentas Mojang)" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerEnforceSecureProfile" Content="Enforce Secure Profile" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerEnableCodeOfConduct" Content="Enable Code of Conduct" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerWhitelist" Content="Whitelist (solo jugadores autorizados)" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerEnforceWhitelist" Content="Enforce Whitelist" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerHardcore" Content="Hardcore Mode" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerPvp" Content="PvP Enabled" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerForceGamemode" Content="Force Gamemode (fuerza el gamemode en login)" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerAllowFlight" Content="Allow Flight" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerHideOnlinePlayers" Content="Hide Online Players" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerAcceptsTransfers" Content="Accepts Transfers" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerGenerateStructures" Content="Generate Structures" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerSyncChunkWrites" Content="Sync Chunk Writes" Foreground="White" Margin="0,0,0,10" FontSize="12"/>
+                        <CheckBox x:Name="ServerLogIPs" Content="Log IPs" Foreground="White" Margin="0,0,0,20" FontSize="12"/>
+                        
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <Button x:Name="SaveServerPropertiesBtn" Content="Guardar Propiedades del Servidor" Width="270" Height="45" 
+                                    Background="#4CAF50" Foreground="White" FontWeight="Bold" FontSize="14"
+                                    Cursor="Hand" Margin="0,0,10,0"/>
+                            <Button x:Name="ReloadServerPropertiesBtn" Content="Recargar Propiedades" Width="200" Height="45" 
+                                    Background="#2196F3" Foreground="White" FontWeight="Bold" FontSize="14"
+                                    Cursor="Hand"/>
+                        </StackPanel>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>
@@ -382,13 +515,13 @@ $script:translations = @{
         cant_restart = "No se puede reiniciar: no esta corriendo"; player_count = "jugador(es):"
         playit_ip_copied = "IP de Minecraft copiada:"; playit_vc_copied = "IP de Voicechat copiada:"
         no_ip_detected = "No hay IP detectada para copiar"; server_loaded = "Servidor cargado correctamente"
-        error_loading = "Error al cargar servidor:"; invalid_path = "Ruta invalida:"
+        error_loading = "Error al cargar servidor"; invalid_path = "Ruta invalida:"
         config_saved_msg = "Configuracion guardada correctamente"; error_saving = "Error al guardar:"
         hours_saved = "Horarios guardados:"; boot_enabled = "Inicio automatico habilitado"
         error_saving_hours = "Error guardando horarios:"; min_short = "min"; lines_short = "lineas"
         cannot_shutdown_during_hours = "No se puede apagar durante las horas de operacion configuradas. Desactiva 'Solo apagar fuera de horas' si es necesario apagar ahora."
         monitoring_messages = "(Mostrara mensajes de monitoreo: jugadores, inactividad, etc.)"
-        tab_principal = "Principal"; tab_playit = "PlayIT"; tab_configuracion = "Configuracion"
+        tab_principal = "Principal"; tab_playit = "PlayIT"; tab_configuracion = "Configuracion"; tab_server_settings = "Configuracion del Servidor"
         server_fully_loaded = "Servidor completamente cargado"
         idle_shutdown_msg = "Servidor inactivo por X minutos - apagando"
         idle_msg = "(Apagara el servidor cuando no hay jugadores por X minutos)"
@@ -396,6 +529,31 @@ $script:translations = @{
         ips_detected_success = "IPs detectadas correctamente"
         not_configured = "No configurado"
         hours_range = "(Horas: 0-23, Minutos: 0-59)"
+        basic_settings = "Configuracion Basica"; world_settings = "Configuracion del Mundo"
+        security_settings = "Seguridad y Caracteristicas"
+        motd = "MOTD (Message of the Day):"; max_players = "Max Players:"
+        view_distance = "View Distance:"; simulation_distance = "Simulation Distance:"
+        spawn_protection = "Spawn Protection:"; player_idle_timeout = "Player Idle Timeout:"
+        level_name = "Level Name:"; level_seed = "Level Seed:"; level_type = "Level Type:"
+        gamemode = "Gamemode:"; difficulty = "Difficulty:"; max_tick_time = "Max Tick Time:"
+        max_world_size = "Max World Size:"; online_mode = "Online Mode (verificacion de cuentas Mojang)"
+        enforce_secure_profile = "Enforce Secure Profile"; enable_code_of_conduct = "Enable Code of Conduct"
+        whitelist = "Whitelist (solo jugadores autorizados)"; enforce_whitelist = "Enforce Whitelist"
+        hardcore_mode = "Hardcore Mode"; pvp_enabled = "PvP Enabled"
+        force_gamemode = "Force Gamemode (fuerza el gamemode en login)"
+        allow_flight = "Allow Flight"; hide_online_players = "Hide Online Players"
+        accepts_transfers = "Accepts Transfers"; generate_structures = "Generate Structures"
+        sync_chunk_writes = "Sync Chunk Writes"; log_ips = "Log IPs"
+        save_server_properties = "Guardar Propiedades del Servidor"
+        reload_server_properties = "Recargar Propiedades"
+        server_properties_saved = "Propiedades del servidor guardadas correctamente"
+        server_properties_applied = "Propiedades aplicadas - reinicia el servidor para que tengan efecto"
+        server_properties_reloaded = "Propiedades del servidor recargadas"
+        error_saving_properties = "Error al guardar propiedades del servidor"
+        run_bat_created = "run.bat creado correctamente en:"; eula_accepted = "EULA aceptado automaticamente"
+        no_server_jar = "No se encontro server.jar ni run.bat en el directorio del servidor"
+        generating_properties = "Generando server.properties - iniciando servidor brevemente..."
+        properties_generated = "server.properties generado correctamente"; eula_accepted_successfully = "EULA aceptado exitosamente"
     }
     en = @{
         app_title = "SERVER LAUNCH"; app_subtitle = "Minecraft Server Manager"
@@ -447,7 +605,7 @@ $script:translations = @{
         error_saving_hours = "Error saving hours:"; min_short = "min"; lines_short = "lines"
         cannot_shutdown_during_hours = "Cannot shutdown during configured operating hours. Disable 'Only shutdown outside hours' if you need to shutdown now."
         monitoring_messages = "(Will show monitoring messages: players, inactivity, etc.)"
-        tab_principal = "Main"; tab_playit = "PlayIT"; tab_configuracion = "Settings"
+        tab_principal = "Main"; tab_playit = "PlayIT"; tab_configuracion = "Settings"; tab_server_settings = "Server Settings"
         server_fully_loaded = "Server fully loaded"
         idle_shutdown_msg = "Server idle for X minutes - shutting down"
         idle_msg = "(Will shutdown server when no players for X minutes)"
@@ -455,6 +613,31 @@ $script:translations = @{
         ips_detected_success = "IPs detected successfully"
         not_configured = "Not configured"
         hours_range = "(Hours: 0-23, Minutes: 0-59)"
+        basic_settings = "Basic Settings"; world_settings = "World Settings"
+        security_settings = "Security & Features"
+        motd = "MOTD (Message of the Day):"; max_players = "Max Players:"
+        view_distance = "View Distance:"; simulation_distance = "Simulation Distance:"
+        spawn_protection = "Spawn Protection:"; player_idle_timeout = "Player Idle Timeout:"
+        level_name = "Level Name:"; level_seed = "Level Seed:"; level_type = "Level Type:"
+        gamemode = "Gamemode:"; difficulty = "Difficulty:"; max_tick_time = "Max Tick Time:"
+        max_world_size = "Max World Size:"; online_mode = "Online Mode (Mojang account verification)"
+        enforce_secure_profile = "Enforce Secure Profile"; enable_code_of_conduct = "Enable Code of Conduct"
+        whitelist = "Whitelist (authorized players only)"; enforce_whitelist = "Enforce Whitelist"
+        hardcore_mode = "Hardcore Mode"; pvp_enabled = "PvP Enabled"
+        force_gamemode = "Force Gamemode (forces gamemode on login)"
+        allow_flight = "Allow Flight"; hide_online_players = "Hide Online Players"
+        accepts_transfers = "Accepts Transfers"; generate_structures = "Generate Structures"
+        sync_chunk_writes = "Sync Chunk Writes"; log_ips = "Log IPs"
+        save_server_properties = "Save Server Properties"
+        reload_server_properties = "Reload Properties"
+        server_properties_saved = "Server properties saved successfully"
+        server_properties_applied = "Properties applied - restart server for changes to take effect"
+        server_properties_reloaded = "Server properties reloaded"
+        error_saving_properties = "Error saving server properties"
+        run_bat_created = "run.bat created successfully at:"; eula_accepted = "EULA accepted automatically"
+        no_server_jar = "server.jar or run.bat not found in server directory"
+        generating_properties = "Generating server.properties - starting server briefly..."
+        properties_generated = "server.properties generated successfully"; eula_accepted_successfully = "EULA accepted successfully"
     }
 }
 
@@ -533,7 +716,32 @@ function Update-UILanguage {
     # Traducir pestañas
     $window.FindName("TabPrincipal").Header = Get-Text 'tab_principal'
     $window.FindName("TabPlayIT").Header = Get-Text 'tab_playit'
+    $window.FindName("TabServerSettings").Header = Get-Text 'tab_server_settings'
     $window.FindName("TabConfiguracion").Header = Get-Text 'tab_configuracion'
+    
+    # TextBlocks - Tab Server Settings
+    $window.FindName("LblBasicSettings").Text = Get-Text 'basic_settings'
+    $window.FindName("LblWorldSettings").Text = Get-Text 'world_settings'
+    $window.FindName("LblSecuritySettings").Text = Get-Text 'security_settings'
+    $window.FindName("SaveServerPropertiesBtn").Content = Get-Text 'save_server_properties'
+    $window.FindName("ReloadServerPropertiesBtn").Content = Get-Text 'reload_server_properties'
+    
+    # Traducciones de Server Settings - Labels
+    try {
+        $window.FindName("LblMotd").Text = "MOTD (Message of the Day):"
+        $window.FindName("LblMaxPlayers").Text = "Max Players:"
+        $window.FindName("LblViewDistance").Text = "View Distance:"
+        $window.FindName("LblSimulationDistance").Text = "Simulation Distance:"
+        $window.FindName("LblSpawnProtection").Text = "Spawn Protection:"
+        $window.FindName("LblPlayerIdleTimeout").Text = "Player Idle Timeout:"
+        $window.FindName("LblLevelName").Text = "Level Name:"
+        $window.FindName("LblLevelSeed").Text = "Level Seed:"
+        $window.FindName("LblLevelType").Text = "Level Type:"
+        $window.FindName("LblGamemode").Text = "Gamemode:"
+        $window.FindName("LblDifficulty").Text = "Difficulty:"
+        $window.FindName("LblMaxTickTime").Text = "Max Tick Time:"
+        $window.FindName("LblMaxWorldSize").Text = "Max World Size:"
+    } catch { }
     
     # Actualizar estado inicial si no hay servidor cargado - similar a PlayIT
     $statusText = $window.FindName("StatusText")
@@ -743,6 +951,310 @@ function Update-PlayerList {
     }
 }
 
+# Funciones para server.properties
+function Load-ServerProperties {
+    param([string]$serverPath)
+    
+    if (-not $serverPath) { return }
+    
+    $propsFile = Join-Path $serverPath "server.properties"
+    if (-not (Test-Path $propsFile)) { 
+        Append-Log "[Server] server.properties no encontrado - cargando valores por defecto"
+        return 
+    }
+    
+    try {
+        $props = @{}
+        Get-Content $propsFile -Encoding UTF8 | ForEach-Object {
+            if ($_ -match '^([^#][^=]+)=(.*)$') {
+                $key = $matches[1].Trim()
+                $value = $matches[2].Trim()
+                $props[$key] = $value
+            }
+        }
+        
+        # Cargar valores en la UI
+        # Cargar valores en la UI
+        if ($props.ContainsKey("motd")) { 
+            $window.FindName("ServerMOTD").Text = $props["motd"] 
+        }
+        if ($props.ContainsKey("max-players")) { 
+            $window.FindName("ServerMaxPlayers").Text = $props["max-players"] 
+        }
+        if ($props.ContainsKey("view-distance")) { 
+            $window.FindName("ServerViewDistance").Text = $props["view-distance"] 
+        }
+        if ($props.ContainsKey("simulation-distance")) { 
+            $window.FindName("ServerSimulationDistance").Text = $props["simulation-distance"] 
+        }
+        if ($props.ContainsKey("spawn-protection")) { 
+            $window.FindName("ServerSpawnProtection").Text = $props["spawn-protection"] 
+        }
+        if ($props.ContainsKey("player-idle-timeout")) { 
+            $window.FindName("ServerIdleTimeout").Text = $props["player-idle-timeout"] 
+        }
+        if ($props.ContainsKey("level-name")) { 
+            $window.FindName("ServerLevelName").Text = $props["level-name"] 
+        }
+        if ($props.ContainsKey("level-seed")) { 
+            $window.FindName("ServerLevelSeed").Text = $props["level-seed"] 
+        }
+        if ($props.ContainsKey("max-tick-time")) { 
+            $window.FindName("ServerMaxTickTime").Text = $props["max-tick-time"] 
+        }
+        if ($props.ContainsKey("max-world-size")) { 
+            $window.FindName("ServerMaxWorldSize").Text = $props["max-world-size"] 
+        }
+        
+        # ComboBoxes
+        if ($props.ContainsKey("level-type")) {
+            $combo = $window.FindName("ServerLevelType")
+            foreach ($item in $combo.Items) {
+                if ($item.Tag -eq $props["level-type"]) {
+                    $combo.SelectedItem = $item
+                    break
+                }
+            }
+        }
+        if ($props.ContainsKey("gamemode")) {
+            $combo = $window.FindName("ServerGamemode")
+            foreach ($item in $combo.Items) {
+                if ($item.Tag -eq $props["gamemode"]) {
+                    $combo.SelectedItem = $item
+                    break
+                }
+            }
+        }
+        if ($props.ContainsKey("difficulty")) {
+            $combo = $window.FindName("ServerDifficulty")
+            foreach ($item in $combo.Items) {
+                if ($item.Tag -eq $props["difficulty"]) {
+                    $combo.SelectedItem = $item
+                    break
+                }
+            }
+        }
+        
+        # CheckBoxes
+        if ($props.ContainsKey("online-mode")) { 
+            $window.FindName("ServerOnlineMode").IsChecked = ($props["online-mode"] -eq "true") 
+        }
+        if ($props.ContainsKey("enforce-secure-profile")) { 
+            $window.FindName("ServerEnforceSecureProfile").IsChecked = ($props["enforce-secure-profile"] -eq "true") 
+        }
+        if ($props.ContainsKey("enable-code-of-conduct")) { 
+            $window.FindName("ServerEnableCodeOfConduct").IsChecked = ($props["enable-code-of-conduct"] -eq "true") 
+        }
+        if ($props.ContainsKey("white-list")) { 
+            $window.FindName("ServerWhitelist").IsChecked = ($props["white-list"] -eq "true") 
+        }
+        if ($props.ContainsKey("enforce-whitelist")) { 
+            $window.FindName("ServerEnforceWhitelist").IsChecked = ($props["enforce-whitelist"] -eq "true") 
+        }
+        if ($props.ContainsKey("hardcore")) { 
+            $window.FindName("ServerHardcore").IsChecked = ($props["hardcore"] -eq "true") 
+        }
+        if ($props.ContainsKey("pvp")) { 
+            $window.FindName("ServerPvp").IsChecked = ($props["pvp"] -eq "true") 
+        }
+        if ($props.ContainsKey("force-gamemode")) { 
+            $window.FindName("ServerForceGamemode").IsChecked = ($props["force-gamemode"] -eq "true") 
+        }
+        if ($props.ContainsKey("allow-flight")) { 
+            $window.FindName("ServerAllowFlight").IsChecked = ($props["allow-flight"] -eq "true") 
+        }
+        if ($props.ContainsKey("hide-online-players")) { 
+            $window.FindName("ServerHideOnlinePlayers").IsChecked = ($props["hide-online-players"] -eq "true") 
+        }
+        if ($props.ContainsKey("accepts-transfers")) { 
+            $window.FindName("ServerAcceptsTransfers").IsChecked = ($props["accepts-transfers"] -eq "true") 
+        }
+        if ($props.ContainsKey("generate-structures")) { 
+            $window.FindName("ServerGenerateStructures").IsChecked = ($props["generate-structures"] -eq "true") 
+        }
+        if ($props.ContainsKey("sync-chunk-writes")) { 
+            $window.FindName("ServerSyncChunkWrites").IsChecked = ($props["sync-chunk-writes"] -eq "true") 
+        }
+        if ($props.ContainsKey("log-ips")) { 
+            $window.FindName("ServerLogIPs").IsChecked = ($props["log-ips"] -eq "true") 
+        }
+        
+        Append-Log "[Server] Propiedades del servidor cargadas"
+    }
+    catch {
+        Append-Log "[Server][ERROR] Error al cargar server.properties: $_"
+    }
+}
+
+function Save-ServerProperties {
+    param([string]$serverPath)
+    
+    if (-not $serverPath) { 
+        [System.Windows.MessageBox]::Show($window, (Get-Text 'select_server'), (Get-Text 'error'))
+        return $false
+    }
+    
+    $propsFile = Join-Path $serverPath "server.properties"
+    if (-not (Test-Path $propsFile)) {
+        Append-Log "[Server][WARN] server.properties no encontrado, se creara uno nuevo"
+    }
+    
+    try {
+        # Leer el archivo existente para preservar comentarios y orden
+        $lines = @()
+        if (Test-Path $propsFile) {
+            $lines = Get-Content $propsFile -Encoding UTF8
+        }
+        
+        # Función helper para actualizar una propiedad
+        function Update-Property {
+            param($key, $value)
+            $found = $false
+            for ($i = 0; $i -lt $lines.Count; $i++) {
+                if ($lines[$i] -match "^$key=") {
+                    $lines[$i] = "$key=$value"
+                    $found = $true
+                    break
+                }
+            }
+            if (-not $found) {
+                $lines += "$key=$value"
+            }
+        }
+        
+        # Actualizar propiedades desde la UI
+        Update-Property "motd" $window.FindName("ServerMOTD").Text
+        Update-Property "max-players" $window.FindName("ServerMaxPlayers").Text
+        Update-Property "view-distance" $window.FindName("ServerViewDistance").Text
+        Update-Property "simulation-distance" $window.FindName("ServerSimulationDistance").Text
+        Update-Property "spawn-protection" $window.FindName("ServerSpawnProtection").Text
+        Update-Property "player-idle-timeout" $window.FindName("ServerIdleTimeout").Text
+        Update-Property "level-name" $window.FindName("ServerLevelName").Text
+        Update-Property "level-seed" $window.FindName("ServerLevelSeed").Text
+        Update-Property "max-tick-time" $window.FindName("ServerMaxTickTime").Text
+        Update-Property "max-world-size" $window.FindName("ServerMaxWorldSize").Text
+        
+        # ComboBoxes
+        $levelType = $window.FindName("ServerLevelType").SelectedItem
+        if ($levelType) { Update-Property "level-type" $levelType.Tag }
+        
+        $gamemode = $window.FindName("ServerGamemode").SelectedItem
+        if ($gamemode) { Update-Property "gamemode" $gamemode.Tag }
+        
+        $difficulty = $window.FindName("ServerDifficulty").SelectedItem
+        if ($difficulty) { Update-Property "difficulty" $difficulty.Tag }
+        
+        # CheckBoxes
+        Update-Property "online-mode" $(if ($window.FindName("ServerOnlineMode").IsChecked) { "true" } else { "false" })
+        Update-Property "enforce-secure-profile" $(if ($window.FindName("ServerEnforceSecureProfile").IsChecked) { "true" } else { "false" })
+        Update-Property "enable-code-of-conduct" $(if ($window.FindName("ServerEnableCodeOfConduct").IsChecked) { "true" } else { "false" })
+        Update-Property "white-list" $(if ($window.FindName("ServerWhitelist").IsChecked) { "true" } else { "false" })
+        Update-Property "enforce-whitelist" $(if ($window.FindName("ServerEnforceWhitelist").IsChecked) { "true" } else { "false" })
+        Update-Property "hardcore" $(if ($window.FindName("ServerHardcore").IsChecked) { "true" } else { "false" })
+        Update-Property "pvp" $(if ($window.FindName("ServerPvp").IsChecked) { "true" } else { "false" })
+        Update-Property "force-gamemode" $(if ($window.FindName("ServerForceGamemode").IsChecked) { "true" } else { "false" })
+        Update-Property "allow-flight" $(if ($window.FindName("ServerAllowFlight").IsChecked) { "true" } else { "false" })
+        Update-Property "hide-online-players" $(if ($window.FindName("ServerHideOnlinePlayers").IsChecked) { "true" } else { "false" })
+        Update-Property "accepts-transfers" $(if ($window.FindName("ServerAcceptsTransfers").IsChecked) { "true" } else { "false" })
+        Update-Property "generate-structures" $(if ($window.FindName("ServerGenerateStructures").IsChecked) { "true" } else { "false" })
+        Update-Property "sync-chunk-writes" $(if ($window.FindName("ServerSyncChunkWrites").IsChecked) { "true" } else { "false" })
+        Update-Property "log-ips" $(if ($window.FindName("ServerLogIPs").IsChecked) { "true" } else { "false" })
+        
+        # Guardar archivo
+        Set-Content -Path $propsFile -Value $lines -Encoding UTF8
+        
+        Append-Log "[Server] $(Get-Text 'server_properties_saved')"
+        return $true
+    }
+    catch {
+        Append-Log "[Server][ERROR] $(Get-Text 'error_saving_properties'): $_"
+        return $false
+    }
+}
+
+function Create-RunBat {
+    param([string]$serverPath)
+    
+    if (-not $serverPath) { return }
+    
+    $runBatPath = Join-Path $serverPath "run.bat"
+    
+    # No crear si ya existe
+    if (Test-Path $runBatPath) { return }
+    
+    try {
+        # Buscar Java 21 primero, luego otros
+        $javaPath = $null
+        $javaDirs = @(
+            "C:\Program Files\Java\jdk-21",
+            "C:\Program Files\Java\jre-21",
+            "C:\Program Files\Java\jdk-17",
+            "C:\Program Files\Java\jre-17"
+        )
+        
+        foreach ($dir in $javaDirs) {
+            $testPath = Join-Path $dir "bin\java.exe"
+            if (Test-Path $testPath) {
+                $javaPath = $testPath
+                break
+            }
+        }
+        
+        if (-not $javaPath) {
+            $javaPath = "java"  # Usar del PATH si no se encuentra
+        }
+        
+        # Contenido del run.bat
+        $content = @"
+@echo off
+"$javaPath" -Xmx2G -Xms1G -jar server.jar nogui
+pause
+"@
+        
+        Set-Content -Path $runBatPath -Value $content -Encoding ASCII
+        Append-Log "[Server] $(Get-Text 'run_bat_created') $runBatPath"
+    }
+    catch {
+        Append-Log "[Server][ERROR] Error al crear run.bat: $_"
+    }
+}
+
+function Accept-EULA {
+    param([string]$serverPath)
+    
+    if (-not $serverPath) { return }
+    
+    $eulaPath = Join-Path $serverPath "eula.txt"
+    
+    try {
+        # Siempre crear o sobrescribir el eula.txt con eula=true
+        $content = @"
+#By changing the setting below to TRUE you are indicating your agreement to our EULA (https://aka.ms/MinecraftEULA).
+#$(Get-Date -Format "ddd MMM dd HH:mm:ss yyyy")
+eula=true
+"@
+        
+        Set-Content -Path $eulaPath -Value $content -Encoding UTF8
+        Append-Log "[Server] $(Get-Text 'eula_accepted_successfully')"
+    }
+    catch {
+        Append-Log "[Server][ERROR] Error al aceptar EULA: $_"
+    }
+}
+
+function Update-PlayerList {
+    $box = $window.FindName("PlayersBox")
+    if ($box) {
+        if ($script:onlinePlayers.Count -eq 0) {
+            $box.Text = Get-Text 'no_players'
+            $box.Foreground = "#888888"
+        } else {
+            $box.Text = "$($script:onlinePlayers.Count) $(Get-Text 'player_count') " + ($script:onlinePlayers -join ", ")
+            $box.Foreground = "#4CAF50"
+        }
+    }
+}
+
 function Refresh-BackupList {
     if ($script:backupManager -and $script:serverManager) {
         $script:backupManager.CurrentServerName = $script:serverManager.ServerName
@@ -776,7 +1288,23 @@ function Refresh-BackupList {
 
 function Load-ServerPath {
     param([string]$path)
-    if (-not (Test-Path $path)) { Append-Log "[ERROR] Ruta invalida: $path"; return }
+    if (-not (Test-Path $path)) { 
+        Append-Log "[ERROR] Ruta invalida - $path"
+        Update-Status "error_loading" "#FF6B6B"
+        return 
+    }
+    
+    # Verificar que exista server.jar o run.bat
+    $hasServerJar = Test-Path (Join-Path $path "server.jar")
+    $hasRunBat = Test-Path (Join-Path $path "run.bat")
+    
+    if (-not $hasServerJar -and -not $hasRunBat) {
+        Append-Log "[ERROR] No se encontro server.jar ni run.bat en el directorio"
+        Update-Status "error_loading" "#FF6B6B"
+        $window.FindName("ServerPath").Text = ""
+        return
+    }
+    
     $window.FindName("ServerPath").Text = $path
     try {
         $script:serverManager = [ServerManager]::new($path)
@@ -786,9 +1314,60 @@ function Load-ServerPath {
         Update-Status "server_loaded" "#4CAF50"
         Append-Log "[Sistema] Servidor detectado: $($script:serverManager.ServerName)"
         Refresh-BackupList
+        
+        # Aceptar EULA automáticamente
+        Accept-EULA -serverPath $path
+        
+        # Crear run.bat si no existe
+        Create-RunBat -serverPath $path
+        
+        # Verificar si existe server.properties
+        $propsFile = Join-Path $path "server.properties"
+        if (-not (Test-Path $propsFile)) {
+            Append-Log "[Server] Generando server.properties - iniciando servidor brevemente..."
+            # Intentar iniciar el servidor brevemente para que genere server.properties
+            if ($hasServerJar) {
+                # Usar Java 21
+                $javaPath = "C:\Program Files\Java\jdk-21\bin\java.exe"
+                if (-not (Test-Path $javaPath)) {
+                    $javaPath = "java"
+                }
+                
+                # Iniciar servidor con timeout para que genere propiedades
+                $psi = New-Object System.Diagnostics.ProcessStartInfo
+                $psi.FileName = $javaPath
+                $psi.Arguments = "-Xmx1G -Xms512M -jar server.jar nogui"
+                $psi.WorkingDirectory = $path
+                $psi.RedirectStandardOutput = $true
+                $psi.RedirectStandardError = $true
+                $psi.UseShellExecute = $false
+                $psi.CreateNoWindow = $true
+                
+                try {
+                    $proc = [System.Diagnostics.Process]::Start($psi)
+                    if ($proc) {
+                        $proc.WaitForExit(15000)  # Esperar 15 segundos para que genere las propiedades
+                        if (-not $proc.HasExited) {
+                            try { $proc.Kill() } catch { }
+                        }
+                        try { $proc.Dispose() } catch { }
+                    }
+                    Start-Sleep -Seconds 3  # Esperar 3 segundos adicionales para que escriba los archivos
+                    
+                    # Verificar si se generó
+                    if (Test-Path $propsFile) {
+                        Append-Log "[Server] server.properties generado correctamente"
+                    } else {
+                        Append-Log "[Server] server.properties aun no se ha generado"
+                    }
+                } catch {
+                    Append-Log "[Server][WARN] No se pudo generar server.properties automáticamente - $_"
+                }
+            }
+        }
     }
     catch {
-        Append-Log "[ERROR] Error al cargar servidor: $_"
+        Append-Log "[ERROR] $(Get-Text 'error_loading') $_"
         Update-Status "error_loading" "#FF6B6B"
     }
 }
@@ -824,6 +1403,20 @@ function Set-ControlState {
         }
     }
     if ($kill) { $kill.IsEnabled = $true }
+}
+
+# Evento: TabControl - Cargar propiedades al seleccionar pestaña Server Settings
+$mainTabControl = $window.FindName("MainTabControl")
+if ($mainTabControl) {
+    $mainTabControl.Add_SelectionChanged({
+        $selectedTab = $mainTabControl.SelectedItem
+        if ($selectedTab -and $selectedTab.Name -eq "TabServerSettings") {
+            # Recargar propiedades del servidor si hay uno cargado
+            if ($script:serverManager -and $script:serverManager.ServerPath) {
+                Load-ServerProperties -serverPath $script:serverManager.ServerPath
+            }
+        }
+    })
 }
 
 # Botón: Limpiar consola
@@ -1267,9 +1860,18 @@ $window.FindName("RestartBtn").Add_Click({
 
 # Botón: Terminar procesos
 $window.FindName("KillProcessBtn").Add_Click({
-    Append-Log "[Sistema] Terminando todos los procesos Java..."
-    Get-Process -Name java,javaw -ErrorAction SilentlyContinue | Stop-Process -Force
-    Append-Log "[Sistema] Todos los procesos Java terminados"
+    Append-Log "[Sistema] Terminando proceso Java del servidor..."
+    if ($script:serverManager -and $script:serverManager.ServerPath) {
+        $javaProcs = Get-ServerJavaProcesses $script:serverManager.ServerPath
+        foreach ($proc in $javaProcs) {
+            try {
+                Stop-Process -Id $proc.Id -Force
+                Append-Log "[Sistema] Proceso Java terminado (PID: $($proc.Id))"
+            } catch {
+                Append-Log "[Sistema][WARN] No se pudo terminar proceso PID $($proc.Id): $_"
+            }
+        }
+    }
     if ($script:serverManager) {
         $script:serverManager.IsRunning = $false
     }
@@ -1308,6 +1910,50 @@ $window.FindName("RestoreBackupBtn").Add_Click({
         } else {
                 [System.Windows.MessageBox]::Show($window, "Selecciona un backup primero", "Error")
         }
+    }
+})
+
+# Botón: Guardar Propiedades del Servidor
+$window.FindName("SaveServerPropertiesBtn").Add_Click({
+    if (-not $script:serverManager -or -not $script:serverManager.ServerPath) {
+        [System.Windows.MessageBox]::Show($window, (Get-Text 'select_server'), (Get-Text 'error'))
+        return
+    }
+    
+    try {
+        $success = Save-ServerProperties -serverPath $script:serverManager.ServerPath
+        if ($success) {
+            [System.Windows.MessageBox]::Show($window, (Get-Text 'server_properties_applied'), (Get-Text 'success'),
+                [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
+        } else {
+            [System.Windows.MessageBox]::Show($window, (Get-Text 'error_saving_properties'), (Get-Text 'error'),
+                [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+        }
+    }
+    catch {
+        Append-Log "[Server][ERROR] $_"
+        [System.Windows.MessageBox]::Show($window, "$(Get-Text 'error_saving_properties'): $_", (Get-Text 'error'),
+            [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
+    }
+})
+
+# Botón: Recargar Propiedades del Servidor
+$window.FindName("ReloadServerPropertiesBtn").Add_Click({
+    if (-not $script:serverManager -or -not $script:serverManager.ServerPath) {
+        [System.Windows.MessageBox]::Show($window, (Get-Text 'select_server'), (Get-Text 'error'))
+        return
+    }
+    
+    try {
+        Load-ServerProperties -serverPath $script:serverManager.ServerPath
+        Append-Log "[Server] $(Get-Text 'server_properties_reloaded')"
+        [System.Windows.MessageBox]::Show($window, (Get-Text 'server_properties_reloaded'), (Get-Text 'success'),
+            [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information)
+    }
+    catch {
+        Append-Log "[Server][ERROR] Error al recargar propiedades: $_"
+        [System.Windows.MessageBox]::Show($window, "Error al recargar propiedades: $_", (Get-Text 'error'),
+            [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Error)
     }
 })
 
@@ -1655,7 +2301,14 @@ $window.Add_Closing({
     try { Remove-Item $script:serverLog -ErrorAction SilentlyContinue -Force } catch { }
     try { if ($script:serverProcess -and -not $script:serverProcess.HasExited) { $script:serverProcess.Kill($true) } } catch { }
     try { if ($script:playitProcess -and -not $script:playitProcess.HasExited) { Stop-Process -Id $script:playitProcess.Id -Force -ErrorAction Stop } } catch { }
-    try { Get-Process -Name java,javaw -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue } catch { }
+    try { 
+        if ($script:serverManager -and $script:serverManager.ServerPath) {
+            $javaProcs = Get-ServerJavaProcesses $script:serverManager.ServerPath
+            foreach ($proc in $javaProcs) {
+                try { Stop-Process -Id $proc.Id -Force } catch { }
+            }
+        }
+    } catch { }
     try { Get-Process -Name playit -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue } catch { }
     try { if ($script:cmdProcess -and -not $script:cmdProcess.HasExited) { Stop-Process -Id $script:cmdProcess.Id -Force -ErrorAction Stop } } catch { }
     try { $script:serverProcess.Dispose() } catch { }
