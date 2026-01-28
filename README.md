@@ -317,7 +317,27 @@ A: Currently Windows-only (PowerShell/WPF). Linux/Mac versions may come in the f
 
 ---
 
-## 📜 License
+## � Changelog
+
+### v2.2.1 - UI/UX Patch (January 2026)
+
+**Dark Theme Improvements**:
+- Enhanced ComboBox styling for better dark mode consistency
+- ComboBox background now matches TextBox (#3C3C3C)
+- Border color unified across ComboBox and TextBox controls (#ABADB3)
+- Dropdown items (hover/selected) background improved (#3C3C3C)
+- Selected item in dropdown displays with white text for better readability
+- Selected item in closed ComboBox displays with white text
+- Dropdown arrow color adjusted to #1A1A1A for better contrast
+
+**Layout Refinements**:
+- Fixed horizontal alignment of form elements with their labels
+- Grid column widths standardized for consistent spacing (250px)
+- All form controls now align perfectly with their labels
+
+---
+
+## �📜 License
 
 ServerLaunch is free software. You may use, modify, and distribute it freely.
 

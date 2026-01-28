@@ -3,7 +3,7 @@
     "startMin":  0,
     "shutdownPCAfterServer":  false,
     "enableOperatingHours":  false,
-    "backupBeforeCloseEnabled":  true,
+    "backupBeforeCloseEnabled":  false,
     "autoClearMinutes":  0,
     "serverPath":  null,
     "enableConsoleLogging":  false,

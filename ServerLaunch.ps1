@@ -36,6 +36,177 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
         <!-- TabControl -->
         <TabControl x:Name="MainTabControl" Grid.Row="1" Background="#1E1E1E" BorderThickness="0" Margin="20,0,20,20">
             <TabControl.Resources>
+                <!-- Estilo para botones con estado disabled en gris -->
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Padding" Value="10,5"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="ButtonBorder" Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter TargetName="ButtonBorder" Property="Background" Value="#666666"/>
+                                        <Setter Property="Foreground" Value="#999999"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                
+                <!-- Estilo personalizado para ListBoxItem sin estados estándar -->
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Background" Value="#1E1E1E"/>
+                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                    <Setter Property="Padding" Value="10,8"/>
+                    <Setter Property="Margin" Value="0,3"/>
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBoxItem">
+                                <Border Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#2D2D2D"/>
+                                        <Setter Property="BorderBrush" Value="#666666"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#3C3C3C"/>
+                                        <Setter Property="BorderBrush" Value="#888888"/>
+                                        <Setter Property="Foreground" Value="#FFFFFF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                
+                <!-- Estilo personalizado para ListBox -->
+                <Style TargetType="ListBox">
+                    <Setter Property="Background" Value="#1A1A1A"/>
+                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                    <Setter Property="BorderBrush" Value="#555555"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBox">
+                                <Border Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                
+                <!-- Estilo global para ComboBoxItem (dropdown items) -->
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Background" Value="#1E1E1E"/>
+                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                    <Setter Property="Padding" Value="8,6"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ComboBoxItem">
+                                <Border x:Name="Bd" Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsHighlighted" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="#3C3C3C"/>
+                                        <Setter Property="Foreground" Value="#E0E0E0"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="Bd" Property="Background" Value="#3C3C3C"/>
+                                        <Setter Property="Foreground" Value="#E0E0E0"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                
+                <!-- Estilo global para ComboBox -->
+                <Style TargetType="ComboBox">
+                    <Setter Property="Background" Value="#3C3C3C"/>
+                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                    <Setter Property="BorderBrush" Value="#ABADB3"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="Padding" Value="8"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ComboBox">
+                                <Grid>
+                                    <ToggleButton x:Name="DropDownButton" 
+                                                  Focusable="False" 
+                                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                                  Background="{TemplateBinding Background}" 
+                                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                                  BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate TargetType="ToggleButton">
+                                                <Grid Background="{TemplateBinding Background}">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="20"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.ColumnSpan="2" Background="{TemplateBinding Background}" 
+                                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                                            BorderThickness="{TemplateBinding BorderThickness}"/>
+                                                    <Path Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                          Fill="#1A1A1A" Data="M0,0 L4,4 L8,0 Z"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
+                                    <ContentPresenter x:Name="ContentPresenter" 
+                                                      Margin="8,0,28,0"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Left"
+                                                      Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                      IsHitTestVisible="False"/>
+                                    <Popup x:Name="PART_Popup" 
+                                           AllowsTransparency="True" 
+                                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                                           Placement="Bottom" 
+                                           PopupAnimation="Slide">
+                                        <Border x:Name="DropDownBorder" 
+                                                Background="#1E1E1E" 
+                                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                                BorderThickness="1"
+                                                MinWidth="{TemplateBinding ActualWidth}">
+                                            <ScrollViewer SnapsToDevicePixels="True">
+                                                <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Popup>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+                
                 <Style TargetType="TabItem">
                     <Setter Property="Background" Value="#2D2D2D"/>
                     <Setter Property="Foreground" Value="#E0E0E0"/>
@@ -69,7 +240,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <!-- Servidor -->
                         <TextBlock x:Name="LblServer" Text="Servidor" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBox x:Name="ServerPath" Width="400" Height="35" Padding="10" 
+                            <TextBox x:Name="ServerPath" Width="400" Height="40" Padding="10" 
                                      Background="#3C3C3C" Foreground="White" IsReadOnly="True"/>
                             <Button x:Name="BrowseServer" Content="Examinar" Width="100" Height="35" 
                                     Background="#4CAF50" Foreground="White" FontWeight="Bold"
@@ -79,7 +250,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <!-- PlayIT -->
                         <TextBlock x:Name="LblPlayit" Text="PlayIT (Opcional)" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBox x:Name="PlayitPath" Width="400" Height="35" Padding="10" 
+                            <TextBox x:Name="PlayitPath" Width="400" Height="40" Padding="10" 
                                      Background="#3C3C3C" Foreground="White" IsReadOnly="True"/>
                             <Button x:Name="BrowsePlayit" Content="Examinar" Width="100" Height="35" 
                                     Background="#2196F3" Foreground="White" FontWeight="Bold"
@@ -102,15 +273,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <!-- Backups -->
                         <TextBlock x:Name="LblBackups" Text="Backups" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <ComboBox x:Name="BackupSelect" Width="350" Height="32" Background="#000000" 
-                                      Foreground="White" Padding="8" Margin="0,0,10,0" BorderBrush="#555555" BorderThickness="1">
-                                <ComboBox.ItemContainerStyle>
-                                    <Style TargetType="ComboBoxItem">
-                                        <Setter Property="Foreground" Value="White"/>
-                                        <Setter Property="Background" Value="#000000"/>
-                                    </Style>
-                                </ComboBox.ItemContainerStyle>
-                            </ComboBox>
+                            <ComboBox x:Name="BackupSelect" Width="350" Height="32" Margin="0,0,10,0"/>
                             <Button x:Name="RestoreBackupBtn" Content="Restaurar" Width="90" Height="32" 
                                     Background="#FF9800" Foreground="White" FontWeight="Bold" Cursor="Hand"/>
                         </StackPanel>
@@ -148,7 +311,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         
                         <TextBlock x:Name="LblIPServer" Text="IP Server" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBox x:Name="PlayitMinecraftIP" Width="400" Height="35" Padding="10" 
+                            <TextBox x:Name="PlayitMinecraftIP" Width="400" Height="40" Padding="10" 
                                      Background="#3C3C3C" Foreground="White" IsReadOnly="True" Text="No detectado"/>
                             <Button x:Name="CopyMinecraftIP" Content="Copiar" Width="100" Height="35" 
                                     Background="#4CAF50" Foreground="White" FontWeight="Bold"
@@ -157,7 +320,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         
                         <TextBlock x:Name="LblIPVoicechat" Text="IP Voicechat" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <TextBox x:Name="PlayitVoicechatIP" Width="400" Height="35" Padding="10" 
+                            <TextBox x:Name="PlayitVoicechatIP" Width="400" Height="40" Padding="10" 
                                      Background="#3C3C3C" Foreground="White" IsReadOnly="True" Text="No detectado"/>
                             <Button x:Name="CopyVoicechatIP" Content="Copiar" Width="100" Height="35" 
                                     Background="#2196F3" Foreground="White" FontWeight="Bold"
@@ -183,7 +346,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <TextBlock x:Name="LblBasicSettings" Text="Configuracion Basica" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
                         
                         <TextBlock x:Name="LblMotd" Text="MOTD (Message of the Day):" FontSize="12" Margin="0,0,0,5"/>
-                        <TextBox x:Name="ServerMOTD" Width="550" Height="32" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="ServerMOTD" Width="550" Height="40" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
                         
                         <Grid Margin="0,0,0,15">
                             <Grid.ColumnDefinitions>
@@ -193,15 +356,15 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock x:Name="LblMaxPlayers" Text="Max Players:" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="ServerMaxPlayers" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                                <TextBox x:Name="ServerMaxPlayers" Width="150" Height="40" Padding="8" Background="#3C3C3C" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                 <TextBlock x:Name="LblViewDistance" Text="View Distance:" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="ServerViewDistance" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                                <TextBox x:Name="ServerViewDistance" Width="150" Height="40" Padding="8" Background="#3C3C3C" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Grid.Column="2" Margin="10,0,0,0">
                                 <TextBlock x:Name="LblSimulationDistance" Text="Simulation Distance:" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="ServerSimulationDistance" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                                <TextBox x:Name="ServerSimulationDistance" Width="150" Height="40" Padding="8" Background="#3C3C3C" Foreground="White"/>
                             </StackPanel>
                         </Grid>
                         
@@ -213,11 +376,11 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
                                 <TextBlock x:Name="LblSpawnProtection" Text="Spawn Protection:" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="ServerSpawnProtection" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                                <TextBox x:Name="ServerSpawnProtection" Width="150" Height="40" Padding="8" Background="#3C3C3C" Foreground="White"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                 <TextBlock x:Name="LblPlayerIdleTimeout" Text="Player Idle Timeout:" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="ServerIdleTimeout" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                                <TextBox x:Name="ServerIdleTimeout" Width="150" Height="40" Padding="8" Background="#3C3C3C" Foreground="White"/>
                             </StackPanel>
                         </Grid>
                         
@@ -225,13 +388,13 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <TextBlock x:Name="LblWorldSettings" Text="Configuracion del Mundo" FontSize="14" FontWeight="Bold" Margin="0,15,0,10" Foreground="#4CAF50"/>
                         
                         <TextBlock x:Name="LblLevelName" Text="Level Name:" FontSize="12" Margin="0,0,0,5"/>
-                        <TextBox x:Name="ServerLevelName" Width="350" Height="32" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="ServerLevelName" Width="350" Height="40" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
                         
                         <TextBlock x:Name="LblLevelSeed" Text="Level Seed:" FontSize="12" Margin="0,0,0,5"/>
-                        <TextBox x:Name="ServerLevelSeed" Width="350" Height="32" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="ServerLevelSeed" Width="350" Height="40" Padding="8" Background="#3C3C3C" Foreground="White" Margin="0,0,0,15" HorizontalAlignment="Left"/>
                         
                         <TextBlock x:Name="LblLevelType" Text="Level Type:" FontSize="12" Margin="0,0,0,5"/>
-                        <ComboBox x:Name="ServerLevelType" Width="250" Height="32" Background="#3C3C3C" Foreground="White" Padding="8" Margin="0,0,0,15" BorderBrush="#555555" BorderThickness="1" HorizontalAlignment="Left">
+                        <ComboBox x:Name="ServerLevelType" Width="250" Height="32" Margin="0,0,0,15" HorizontalAlignment="Left">
                             <ComboBoxItem Content="minecraft:normal" Tag="minecraft:normal"/>
                             <ComboBoxItem Content="minecraft:flat" Tag="minecraft:flat"/>
                             <ComboBoxItem Content="minecraft:large_biomes" Tag="minecraft:large_biomes"/>
@@ -244,8 +407,8 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                                 <ColumnDefinition Width="250"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock x:Name="LblGamemode" Text="Gamemode:" FontSize="12" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="ServerGamemode" Width="200" Height="32" Background="#3C3C3C" Foreground="White" Padding="8" BorderBrush="#555555" BorderThickness="1">
+                                <TextBlock x:Name="LblGamemode" Text="Gamemode:" FontSize="12" Margin="0,0,0,8" VerticalAlignment="Center"/>
+                                <ComboBox x:Name="ServerGamemode" Width="200" Height="32" HorizontalAlignment="Left">
                                     <ComboBoxItem Content="survival" Tag="survival"/>
                                     <ComboBoxItem Content="creative" Tag="creative"/>
                                     <ComboBoxItem Content="adventure" Tag="adventure"/>
@@ -253,8 +416,8 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                                 </ComboBox>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                <TextBlock x:Name="LblDifficulty" Text="Difficulty:" FontSize="12" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="ServerDifficulty" Width="200" Height="32" Background="#3C3C3C" Foreground="White" Padding="8" BorderBrush="#555555" BorderThickness="1">
+                                <TextBlock x:Name="LblDifficulty" Text="Difficulty:" FontSize="12" Margin="0,0,0,8" VerticalAlignment="Center"/>
+                                <ComboBox x:Name="ServerDifficulty" Width="200" Height="32" HorizontalAlignment="Left">
                                     <ComboBoxItem Content="peaceful" Tag="peaceful"/>
                                     <ComboBoxItem Content="easy" Tag="easy"/>
                                     <ComboBoxItem Content="normal" Tag="normal"/>
@@ -265,16 +428,16 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         
                         <Grid Margin="0,0,0,15">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="250"/>
+                                <ColumnDefinition Width="250"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0">
-                                <TextBlock x:Name="LblMaxTickTime" Text="Max Tick Time:" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="ServerMaxTickTime" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                                <TextBlock x:Name="LblMaxTickTime" Text="Max Tick Time:" FontSize="12" Margin="0,0,0,8" VerticalAlignment="Center"/>
+                                <TextBox x:Name="ServerMaxTickTime" Width="150" Height="40" Padding="8" Background="#3C3C3C" Foreground="White" HorizontalAlignment="Left"/>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                <TextBlock x:Name="LblMaxWorldSize" Text="Max World Size:" FontSize="12" Margin="0,0,0,5"/>
-                                <TextBox x:Name="ServerMaxWorldSize" Width="150" Height="32" Padding="8" Background="#3C3C3C" Foreground="White"/>
+                                <TextBlock x:Name="LblMaxWorldSize" Text="Max World Size:" FontSize="12" Margin="0,0,0,8" VerticalAlignment="Center"/>
+                                <TextBox x:Name="ServerMaxWorldSize" Width="150" Height="40" Padding="8" Background="#3C3C3C" Foreground="White" HorizontalAlignment="Left"/>
                             </StackPanel>
                         </Grid>
                         
@@ -320,7 +483,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <TextBlock x:Name="LblIdleMsg" Text="(Apagara el servidor cuando no hay jugadores por X minutos)" Foreground="#999999" FontSize="10" Margin="0,0,0,10" TextWrapping="Wrap"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
                             <TextBlock x:Name="LblIdleMinutes" Text="Minutos inactivo:" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="12"/>
-                            <TextBox x:Name="IdleMinutesBox" Width="80" Height="30" Padding="8" 
+                            <TextBox x:Name="IdleMinutesBox" Width="80" Height="40" Padding="8" 
                                      Background="#3C3C3C" Foreground="White" Text="30" FontSize="12"/>
                         </StackPanel>
                         <CheckBox x:Name="ShutdownPCCheck" Content="Apagar computadora despues de cerrar el servidor" 
@@ -347,19 +510,19 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                             
                             <TextBlock x:Name="LblStartTime" Grid.Row="0" Grid.Column="0" Text="Hora inicio:" VerticalAlignment="Center" FontSize="12"/>
                             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                <TextBox x:Name="StartHourBox" Width="60" Height="30" Padding="8" 
+                                <TextBox x:Name="StartHourBox" Width="60" Height="40" Padding="8" 
                                          Background="#3C3C3C" Foreground="White" Text="08" FontSize="12" MaxLength="2"/>
                                 <TextBlock Text=":" VerticalAlignment="Center" Margin="5,0" FontSize="14"/>
-                                <TextBox x:Name="StartMinBox" Width="60" Height="30" Padding="8" 
+                                <TextBox x:Name="StartMinBox" Width="60" Height="40" Padding="8" 
                                          Background="#3C3C3C" Foreground="White" Text="00" FontSize="12" MaxLength="2"/>
                             </StackPanel>
                             
                             <TextBlock x:Name="LblEndTime" Grid.Row="2" Grid.Column="0" Text="Hora fin:" VerticalAlignment="Center" FontSize="12"/>
                             <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                                <TextBox x:Name="StopHourBox" Width="60" Height="30" Padding="8" 
+                                <TextBox x:Name="StopHourBox" Width="60" Height="40" Padding="8" 
                                          Background="#3C3C3C" Foreground="White" Text="23" FontSize="12" MaxLength="2"/>
                                 <TextBlock Text=":" VerticalAlignment="Center" Margin="5,0" FontSize="14"/>
-                                <TextBox x:Name="StopMinBox" Width="60" Height="30" Padding="8" 
+                                <TextBox x:Name="StopMinBox" Width="60" Height="40" Padding="8" 
                                          Background="#3C3C3C" Foreground="White" Text="30" FontSize="12" MaxLength="2"/>
                             </StackPanel>
                         </Grid>
@@ -373,7 +536,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                                   Foreground="White" Margin="0,0,0,10" FontSize="12"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <TextBlock x:Name="LblIntervalMin" Text="Intervalo (min):" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="12"/>
-                            <TextBox x:Name="BackupIntervalBox" Width="80" Height="30" Padding="8" 
+                            <TextBox x:Name="BackupIntervalBox" Width="80" Height="40" Padding="8" 
                                      Background="#3C3C3C" Foreground="White" Text="60" FontSize="12"/>
                         </StackPanel>
 
@@ -386,20 +549,18 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                                   Foreground="White" Margin="0,0,0,10" FontSize="12"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                             <TextBlock x:Name="LblEveryMin" Text="Cada (min):" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="12"/>
-                            <TextBox x:Name="AutoClearMinutesBox" Width="80" Height="30" Padding="8" 
+                            <TextBox x:Name="AutoClearMinutesBox" Width="80" Height="40" Padding="8" 
                                      Background="#3C3C3C" Foreground="White" Text="0" FontSize="12"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
                             <TextBlock x:Name="LblLineLimit" Text="Limite lineas:" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="12"/>
-                            <TextBox x:Name="AutoClearLinesBox" Width="80" Height="30" Padding="8" 
+                            <TextBox x:Name="AutoClearLinesBox" Width="80" Height="40" Padding="8" 
                                      Background="#3C3C3C" Foreground="White" Text="500" FontSize="12"/>
                         </StackPanel>
                         
                         <!-- Idioma -->
                         <TextBlock x:Name="LblLanguage" Text="Idioma" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Foreground="#4CAF50"/>
-                        <ComboBox x:Name="LanguageSelect" Width="200" Height="35" Background="#3C3C3C" 
-                                  Foreground="White" Padding="8" Margin="0,0,0,30" BorderBrush="#555555" BorderThickness="1"
-                                  HorizontalAlignment="Left">
+                        <ComboBox x:Name="LanguageSelect" Width="200" Height="35" Margin="0,0,0,30" HorizontalAlignment="Left">
                             <ComboBoxItem Content="Espanol" Tag="es"/>
                             <ComboBoxItem Content="English" Tag="en"/>
                         </ComboBox>
@@ -1276,9 +1437,25 @@ function Refresh-BackupList {
                 foreach ($item in $displayBackups) {
                     $script:backupNameMap[$item.Display] = $item.Actual
                 }
+                
+                # Ajustar altura dinámicamente: máximo 3 items antes de scrollear
+                # Cada item tiene aproximadamente 32 píxeles
+                if ($displayBackups.Count -eq 0) {
+                    $comboBox.Height = 32  # Mostrar solo el placeholder
+                    $comboBox.IsEnabled = $false  # Deshabilitar para no permitir desplegar
+                } else {
+                    $comboBox.IsEnabled = $true
+                    $itemHeight = 32
+                    $maxItems = 3
+                    $calculatedHeight = [Math]::Min($displayBackups.Count, $maxItems) * $itemHeight
+                    $comboBox.Height = $calculatedHeight
+                }
+                
                 $comboBox.ItemsSource = $displayBackups.Display
                 if ($displayBackups.Count -gt 0) {
                     $comboBox.SelectedIndex = 0
+                } else {
+                    $comboBox.SelectedIndex = -1
                 }
             }
         }
