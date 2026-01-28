@@ -6,6 +6,16 @@ ServerLaunch is a powerful Windows application designed to simplify the manageme
 
 ---
 
+## 📦 Download Latest Release
+
+[![Download v2.2](https://img.shields.io/badge/Download-v2.2-4CAF50?style=for-the-badge&logo=github)](https://github.com/MrSpecter07/ServerLaunch/releases/latest)
+
+**Latest Version**: v2.2 | **Released**: January 2026
+
+[📋 View All Releases](https://github.com/MrSpecter07/ServerLaunch/releases)
+
+---
+
 ## ✨ Features
 
 - 🎮 **Universal Server Manager**: Compatible with any Minecraft server (Forge, Fabric, Paper, Vanilla, etc.)
