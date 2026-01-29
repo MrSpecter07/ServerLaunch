@@ -1,4 +1,4 @@
-# 🚀 ServerLaunch v2.2
+# 🚀 ServerLaunch v2.3
 
 **Universal Minecraft Server Manager with Graphical Interface**
 
@@ -8,9 +8,9 @@ ServerLaunch is a powerful Windows application designed to simplify the manageme
 
 ## 📦 Download Latest Release
 
-[![Download v2.2](https://img.shields.io/badge/Download-v2.2-4CAF50?style=for-the-badge&logo=github)](https://github.com/MrSpecter07/ServerLaunch/releases/latest)
+[![Download v2.3](https://img.shields.io/badge/Download-v2.3-4CAF50?style=for-the-badge&logo=github)](https://github.com/MrSpecter07/ServerLaunch/releases/latest)
 
-**Latest Version**: v2.2 | **Released**: January 2026
+**Latest Version**: v2.3 | **Released**: January 29, 2026
 
 [📋 View All Releases](https://github.com/MrSpecter07/ServerLaunch/releases)
 
@@ -330,7 +330,23 @@ A: Currently Windows-only (PowerShell/WPF). Linux/Mac versions may come in the f
 - All form controls now align perfectly with their labels
 
 ---
+## 📝 Version History
 
+### v2.3 - Server Settings ComboBox Fix (January 29, 2026)
+**Fixed**: Server Settings ComboBox selection issues
+- ✅ Fixed ComboBox selection in Server Settings (LevelType, Gamemode, Difficulty)
+- ✅ Applied modern styling to all ComboBoxes (dark theme with proper color contrast)
+- ✅ Implemented timestamp-based protection to preserve user selections during background refreshes
+- ✅ LevelType values now display with escaped colons (e.g., `minecraft\:normal`)
+- ✅ Improved UI consistency across all dropdown menus
+
+### v2.2 - Layout & Visual Refinements (January 2026)
+**Enhanced**: UI/UX and styling
+- ✅ Fixed ComboBox dropdown styling
+- ✅ Adjusted dropdown arrow colors for better contrast
+- ✅ Standardized grid layout and form element alignment
+
+---
 ## �📜 License
 
 ServerLaunch is free software. You may use, modify, and distribute it freely.
