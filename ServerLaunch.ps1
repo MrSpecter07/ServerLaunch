@@ -122,23 +122,36 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                     <Setter Property="Background" Value="#1E1E1E"/>
                     <Setter Property="Foreground" Value="#E0E0E0"/>
                     <Setter Property="Padding" Value="8,6"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ComboBoxItem">
-                                <Border x:Name="Bd" Background="{TemplateBinding Background}" 
+                                <Border x:Name="Bd" 
+                                        Background="{TemplateBinding Background}" 
                                         BorderBrush="{TemplateBinding BorderBrush}"
-                                        Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter/>
+                                        BorderThickness="0"
+                                        Padding="{TemplateBinding Padding}"
+                                        SnapsToDevicePixels="True">
+                                    <ContentPresenter 
+                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
-                                    <Trigger Property="IsHighlighted" Value="True">
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="False"/>
+                                            <Condition Property="IsMouseOver" Value="True"/>
+                                        </MultiTrigger.Conditions>
                                         <Setter TargetName="Bd" Property="Background" Value="#3C3C3C"/>
-                                        <Setter Property="Foreground" Value="#E0E0E0"/>
-                                    </Trigger>
-                                    <Trigger Property="IsSelected" Value="True">
+                                    </MultiTrigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="True"/>
+                                        </MultiTrigger.Conditions>
                                         <Setter TargetName="Bd" Property="Background" Value="#3C3C3C"/>
-                                        <Setter Property="Foreground" Value="#E0E0E0"/>
-                                    </Trigger>
+                                    </MultiTrigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
@@ -273,7 +286,14 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <!-- Backups -->
                         <TextBlock x:Name="LblBackups" Text="Backups" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                            <ComboBox x:Name="BackupSelect" Width="350" Height="32" Margin="0,0,10,0"/>
+                            <ComboBox x:Name="BackupSelect" Width="350" Height="32" Margin="0,0,10,0">
+                                <ComboBox.Resources>
+                                    <Style TargetType="ComboBoxItem">
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Foreground" Value="#E0E0E0"/>
+                                    </Style>
+                                </ComboBox.Resources>
+                            </ComboBox>
                             <Button x:Name="ReloadBackupsBtn" Content="Recargar" Width="90" Height="32" 
                                     Background="#4CAF50" Foreground="White" FontWeight="Bold" Cursor="Hand" Margin="0,0,10,0"/>
                             <Button x:Name="RestoreBackupBtn" Content="Restaurar" Width="90" Height="32" 
@@ -408,10 +428,16 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         
                         <TextBlock x:Name="LblLevelType" Text="Level Type:" FontSize="12" Margin="0,0,0,5"/>
                         <ComboBox x:Name="ServerLevelType" Width="250" Height="32" Margin="0,0,0,15" HorizontalAlignment="Left">
-                            <ComboBoxItem Content="minecraft:normal" Tag="minecraft:normal"/>
-                            <ComboBoxItem Content="minecraft:flat" Tag="minecraft:flat"/>
-                            <ComboBoxItem Content="minecraft:large_biomes" Tag="minecraft:large_biomes"/>
-                            <ComboBoxItem Content="minecraft:amplified" Tag="minecraft:amplified"/>
+                            <ComboBox.Resources>
+                                <Style TargetType="ComboBoxItem">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                                </Style>
+                            </ComboBox.Resources>
+                            <ComboBoxItem Content="minecraft\:normal" Tag="minecraft\:normal"/>
+                            <ComboBoxItem Content="minecraft\:flat" Tag="minecraft\:flat"/>
+                            <ComboBoxItem Content="minecraft\:large_biomes" Tag="minecraft\:large_biomes"/>
+                            <ComboBoxItem Content="minecraft\:amplified" Tag="minecraft\:amplified"/>
                         </ComboBox>
                         
                         <Grid Margin="0,0,0,15">
@@ -422,6 +448,12 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                             <StackPanel Grid.Column="0">
                                 <TextBlock x:Name="LblGamemode" Text="Gamemode:" FontSize="12" Margin="0,0,0,8" VerticalAlignment="Center"/>
                                 <ComboBox x:Name="ServerGamemode" Width="200" Height="32" HorizontalAlignment="Left">
+                                    <ComboBox.Resources>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="#E0E0E0"/>
+                                        </Style>
+                                    </ComboBox.Resources>
                                     <ComboBoxItem Content="survival" Tag="survival"/>
                                     <ComboBoxItem Content="creative" Tag="creative"/>
                                     <ComboBoxItem Content="adventure" Tag="adventure"/>
@@ -431,6 +463,12 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                 <TextBlock x:Name="LblDifficulty" Text="Difficulty:" FontSize="12" Margin="0,0,0,8" VerticalAlignment="Center"/>
                                 <ComboBox x:Name="ServerDifficulty" Width="200" Height="32" HorizontalAlignment="Left" SelectedIndex="2">
+                                    <ComboBox.Resources>
+                                        <Style TargetType="ComboBoxItem">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Foreground" Value="#E0E0E0"/>
+                                        </Style>
+                                    </ComboBox.Resources>
                                     <ComboBoxItem Content="peaceful" Tag="peaceful"/>
                                     <ComboBoxItem Content="easy" Tag="easy"/>
                                     <ComboBoxItem Content="normal" Tag="normal"/>
@@ -631,7 +669,8 @@ $script:lastClearTime = Get-Date
 $script:consoleStickToBottom = $true
 $script:serverState = "idle"  # idle|starting|running|stopping
 $script:onlinePlayers = @()
-$script:backupNameMap = @{}
+$script:backupDisplayToActual = @{}  # Mapeo de display a nombre real
+$script:isRefreshingBackups = $false  # Flag para evitar llamadas recursivas
 $script:serverFullyLoaded = $false  # Server loaded flags
 $script:serverLoadFlag1 = $false  # "Preparing level" flag
 $script:serverLoadFlag2 = $false  # "Dedicated server took X seconds to load" flag
@@ -1185,30 +1224,50 @@ function Load-ServerProperties {
         # ComboBoxes
         if ($props.ContainsKey("level-type")) {
             $combo = $window.FindName("ServerLevelType")
-            # Normalizar level-type removiendo barras invertidas escapadas
-            $levelTypeValue = $props["level-type"] -replace '\\:', ':'
-            foreach ($item in $combo.Items) {
-                if ($item.Tag -eq $levelTypeValue) {
-                    $combo.SelectedItem = $item
-                    break
+            $levelTypeValue = $props["level-type"]
+            
+            # Verificar si el usuario seleccionó algo recientemente
+            $timeSinceLastUserSelection = if ($script:lastComboBoxUserSelection) { (Get-Date) - $script:lastComboBoxUserSelection } else { [TimeSpan]::MaxValue }
+            
+            # Solo actualizar si ha pasado más de 2 segundos desde la última selección del usuario
+            if ($timeSinceLastUserSelection.TotalSeconds -gt 2) {
+                foreach ($item in $combo.Items) {
+                    if ($item.Tag -eq $levelTypeValue) {
+                        $combo.SelectedItem = $item
+                        break
+                    }
                 }
             }
         }
         if ($props.ContainsKey("gamemode")) {
             $combo = $window.FindName("ServerGamemode")
-            foreach ($item in $combo.Items) {
-                if ($item.Tag -eq $props["gamemode"]) {
-                    $combo.SelectedItem = $item
-                    break
+            
+            # Verificar si el usuario seleccionó algo recientemente
+            $timeSinceLastUserSelection = if ($script:lastComboBoxUserSelection) { (Get-Date) - $script:lastComboBoxUserSelection } else { [TimeSpan]::MaxValue }
+            
+            # Solo actualizar si ha pasado más de 2 segundos desde la última selección del usuario
+            if ($timeSinceLastUserSelection.TotalSeconds -gt 2) {
+                foreach ($item in $combo.Items) {
+                    if ($item.Tag -eq $props["gamemode"]) {
+                        $combo.SelectedItem = $item
+                        break
+                    }
                 }
             }
         }
         if ($props.ContainsKey("difficulty")) {
             $combo = $window.FindName("ServerDifficulty")
-            foreach ($item in $combo.Items) {
-                if ($item.Tag -eq $props["difficulty"]) {
-                    $combo.SelectedItem = $item
-                    break
+            
+            # Verificar si el usuario seleccionó algo recientemente
+            $timeSinceLastUserSelection = if ($script:lastComboBoxUserSelection) { (Get-Date) - $script:lastComboBoxUserSelection } else { [TimeSpan]::MaxValue }
+            
+            # Solo actualizar si ha pasado más de 2 segundos desde la última selección del usuario
+            if ($timeSinceLastUserSelection.TotalSeconds -gt 2) {
+                foreach ($item in $combo.Items) {
+                    if ($item.Tag -eq $props["difficulty"]) {
+                        $combo.SelectedItem = $item
+                        break
+                    }
                 }
             }
         }
@@ -1434,51 +1493,121 @@ function Update-PlayerList {
 }
 
 function Refresh-BackupList {
-    if ($script:backupManager -and $script:serverManager) {
-        $script:backupManager.CurrentServerName = $script:serverManager.ServerName
-        $script:backupManager.CurrentServerPath = $script:serverManager.ServerPath
-        
-        $backups = $script:backupManager.GetBackupList()
-        
-        try {
-            $comboBox = $window.FindName("BackupSelect")
-            if ($comboBox) {
-                $displayBackups = @()
-                foreach ($backup in $backups) {
-                    if ($backup -match '(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})') {
-                        $display = "$($matches[3])/$($matches[2])/$($matches[1]) $($matches[4]):$($matches[5]):$($matches[6])"
-                    } else {
-                        $display = $backup
+    # Evitar llamadas recursivas
+    if ($script:isRefreshingBackups) { return }
+    $script:isRefreshingBackups = $true
+    
+    try {
+        if ($script:backupManager -and $script:serverManager) {
+            $script:backupManager.CurrentServerName = $script:serverManager.ServerName
+            $script:backupManager.CurrentServerPath = $script:serverManager.ServerPath
+            
+            $backups = $script:backupManager.GetBackupList()
+            
+            try {
+                $comboBox = $window.FindName("BackupSelect")
+                if ($comboBox) {
+                    # GUARDAR LA SELECCIÓN ANTERIOR
+                    $previousSelectedIndex = $comboBox.SelectedIndex
+                    
+                    # Limpiar items existentes
+                    $comboBox.Items.Clear()
+                    $comboBox.ItemsSource = $null
+                    
+                    # Guardar mapeo para usar luego
+                    $script:backupMap = @{}
+                    
+                    foreach ($backup in $backups) {
+                        if ($backup -match '(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})') {
+                            $display = "$($matches[3])/$($matches[2])/$($matches[1]) $($matches[4]):$($matches[5]):$($matches[6])"
+                        } else {
+                            $display = $backup
+                        }
+                        
+                        $item = New-Object System.Windows.Controls.ComboBoxItem
+                        $item.Content = $display
+                        $item.Tag = $backup
+                        
+                        # Guardar en mapeo
+                        $script:backupMap[$display] = $backup
+                        
+                        [void]$comboBox.Items.Add($item)
                     }
-                    $displayBackups += [pscustomobject]@{ Display = $display; Actual = $backup }
-                }
-                $script:backupNameMap = @{}
-                foreach ($item in $displayBackups) {
-                    $script:backupNameMap[$item.Display] = $item.Actual
-                }
-                
-                # Ajustar altura dinámicamente: máximo 3 items antes de scrollear
-                # Cada item tiene aproximadamente 32 píxeles
-                if ($displayBackups.Count -eq 0) {
-                    $comboBox.Height = 32  # Mostrar solo el placeholder
-                    $comboBox.IsEnabled = $false  # Deshabilitar para no permitir desplegar
-                } else {
-                    $comboBox.IsEnabled = $true
-                    $itemHeight = 32
-                    $maxItems = 3
-                    $calculatedHeight = [Math]::Min($displayBackups.Count, $maxItems) * $itemHeight
-                    $comboBox.Height = $calculatedHeight
-                }
-                
-                $comboBox.ItemsSource = @($displayBackups | ForEach-Object { $_.Display })
-                if ($displayBackups.Count -gt 0) {
-                    $comboBox.SelectedIndex = 0
-                } else {
-                    $comboBox.SelectedIndex = -1
+                    
+                    # Remover SelectionChanged anterior si existe
+                    if ($comboBox.SelectionChanged) {
+                        foreach ($handler in $comboBox.SelectionChanged.GetInvocationList()) {
+                            $comboBox.RemoveHandler([System.Windows.Controls.Primitives.Selector]::SelectionChangedEvent, $handler)
+                        }
+                    }
+                    
+                    # Agregar handler para SelectionChanged
+                    $script:backupSelectionChangedHandler = {
+                        param($sender, $e)
+                        
+                        if ($e.AddedItems.Count -gt 0) {
+                            $selected = $e.AddedItems[0]
+                            
+                            if ($selected -is [System.Windows.Controls.ComboBoxItem]) {
+                                $sender.IsDropDownOpen = $false
+                            }
+                        }
+                    }
+                    
+                    $comboBox.Add_SelectionChanged($script:backupSelectionChangedHandler)
+                    
+                    $comboBox.Height = 32
+                    
+                    if ($comboBox.Items.Count -eq 0) {
+                        $comboBox.IsEnabled = $false
+                    } else {
+                        $comboBox.IsEnabled = $true
+                        
+                        # RESTAURAR LA SELECCIÓN ANTERIOR si sigue siendo válida
+                        if ($previousSelectedIndex -ge 0 -and $previousSelectedIndex -lt $comboBox.Items.Count) {
+                            $comboBox.SelectedIndex = $previousSelectedIndex
+                        } else {
+                            $comboBox.SelectedIndex = 0
+                        }
+                    }
                 }
             }
+            catch { }
         }
-        catch { }
+    }
+    finally {
+        $script:isRefreshingBackups = $false
+    }
+}
+
+# Función genérica para proteger selección en ComboBox durante cambios
+function Protect-ComboBoxSelection {
+    param(
+        [string]$ComboBoxName
+    )
+    
+    $comboBox = $window.FindName($ComboBoxName)
+    if ($comboBox) {
+        # Guardar selección anterior
+        $previousSelectedIndex = $comboBox.SelectedIndex
+        
+        # Ejecutar un refresh suave que dispara SelectionChanged sin resetear
+        # Por ahora solo devolvemos el índice para que el caller lo pueda usar
+        return $previousSelectedIndex
+    }
+    return -1
+}
+
+# Función para restaurar selección en ComboBox
+function Restore-ComboBoxSelection {
+    param(
+        [string]$ComboBoxName,
+        [int]$PreviousSelectedIndex
+    )
+    
+    $comboBox = $window.FindName($ComboBoxName)
+    if ($comboBox -and $previousSelectedIndex -ge 0 -and $previousSelectedIndex -lt $comboBox.Items.Count) {
+        $comboBox.SelectedIndex = $previousSelectedIndex
     }
 }
 
@@ -1618,6 +1747,39 @@ if ($mainTabControl) {
                 Refresh-BackupList
             }
         }
+    })
+}
+
+# ComboBox: ServerLevelType SelectionChanged
+$serverLevelType = $window.FindName("ServerLevelType")
+if ($serverLevelType) {
+    $serverLevelType.Add_SelectionChanged({
+        param($s, $e)
+        # Marcar timestamp para evitar que Load-ServerProperties resete esta selección
+        $script:lastComboBoxUserSelection = Get-Date
+        $s.IsDropDownOpen = $false
+    })
+}
+
+# ComboBox: ServerGamemode SelectionChanged
+$serverGamemode = $window.FindName("ServerGamemode")
+if ($serverGamemode) {
+    $serverGamemode.Add_SelectionChanged({
+        param($s, $e)
+        # Marcar timestamp para evitar que Load-ServerProperties resete esta selección
+        $script:lastComboBoxUserSelection = Get-Date
+        $s.IsDropDownOpen = $false
+    })
+}
+
+# ComboBox: ServerDifficulty SelectionChanged
+$serverDifficulty = $window.FindName("ServerDifficulty")
+if ($serverDifficulty) {
+    $serverDifficulty.Add_SelectionChanged({
+        param($s, $e)
+        # Marcar timestamp para evitar que Load-ServerProperties resete esta selección
+        $script:lastComboBoxUserSelection = Get-Date
+        $s.IsDropDownOpen = $false
     })
 }
 
@@ -1828,12 +1990,14 @@ $window.FindName("StartBtn").Add_Click({
             
             # Timer para leer logs en tiempo real
             $script:logTimer = New-Object System.Windows.Threading.DispatcherTimer
-            $script:logTimer.Interval = [System.TimeSpan]::FromMilliseconds(500)
+            $script:logTimer.Interval = [System.TimeSpan]::FromMilliseconds(1000)
             $script:logTimer.Add_Tick({
                 # Leer output de PlayIT
                 if (Test-Path $script:playitLog) {
                     try {
-                        $lines = Get-Content $script:playitLog -ErrorAction SilentlyContinue
+                        $fileInfo = Get-Item $script:playitLog -ErrorAction SilentlyContinue
+                        if ($fileInfo -and $fileInfo.Length -gt 0) {
+                            $lines = Get-Content $script:playitLog -Tail 50 -ErrorAction SilentlyContinue
                         if ($lines -and $lines.Count -gt $script:playitLastLine) {
                             $newLines = $lines[$script:playitLastLine..($lines.Count-1)]
                             foreach ($line in $newLines) {
@@ -1874,6 +2038,7 @@ $window.FindName("StartBtn").Add_Click({
                             }
                             $script:playitLastLine = $lines.Count
                         }
+                        }
                     }
                     catch { }
                 }
@@ -1881,7 +2046,9 @@ $window.FindName("StartBtn").Add_Click({
                 # Leer output del servidor
                 if (Test-Path $script:serverLog) {
                     try {
-                        $lines = Get-Content $script:serverLog -ErrorAction SilentlyContinue
+                        $fileInfo = Get-Item $script:serverLog -ErrorAction SilentlyContinue
+                        if ($fileInfo -and $fileInfo.Length -gt 0) {
+                            $lines = Get-Content $script:serverLog -Tail 100 -ErrorAction SilentlyContinue
                         if ($lines -and $lines.Count -gt $script:serverLastLine) {
                             $newLines = $lines[$script:serverLastLine..($lines.Count-1)]
                             foreach ($line in $newLines) {
@@ -1940,6 +2107,7 @@ $window.FindName("StartBtn").Add_Click({
                                 }
                             }
                             $script:serverLastLine = $lines.Count
+                        }
                         }
                     }
                     catch { }
@@ -2128,9 +2296,13 @@ $window.FindName("ReloadBackupsBtn").Add_Click({
 # Botón: Restaurar Backup
 $window.FindName("RestoreBackupBtn").Add_Click({
     if ($script:backupManager -and $script:serverManager) {
-        $selectedDisplay = $window.FindName("BackupSelect").SelectedItem
-        if ($selectedDisplay) {
-            $actualBackup = $script:backupNameMap[$selectedDisplay]
+        $comboBox = $window.FindName("BackupSelect")
+        $selectedItem = $comboBox.SelectedItem
+        
+        if ($selectedItem -and $selectedItem -is [System.Windows.Controls.ComboBoxItem]) {
+            $actualBackup = $selectedItem.Tag
+            $selectedDisplay = $selectedItem.Content
+            
             if ($actualBackup) {
                 Append-Log "[Backup] Restaurando backup: $selectedDisplay"
                 Update-Status "restoring" "#FFB74D"

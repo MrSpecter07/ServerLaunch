@@ -17,3 +17,7 @@ desktop.ini
 
 # PowerShell
 *.ps1~
+
+# Tools locales
+zip_serverlaunch.ps1
+ServerLaunch.zip
