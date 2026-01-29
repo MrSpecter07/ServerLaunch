@@ -1086,7 +1086,7 @@ function Append-Log {
         # Log to file if console logging is enabled
         if ($script:enableConsoleLogging) {
             try {
-                $logDir = Split-Path $script:consoleLogsDir -Parent
+                $logDir = $script:consoleLogsDir
                 if (-not (Test-Path $logDir)) {
                     New-Item -ItemType Directory -Path $logDir -Force | Out-Null
                 }
@@ -2235,7 +2235,7 @@ $window.FindName("SaveConfigBtn").Add_Click({
             $script:enableConsoleLogging = $enableLoggingCheck.IsChecked
             # Create logs directory if logging is enabled
             if ($script:enableConsoleLogging) {
-                $logsPath = Split-Path $script:consoleLogsDir -Parent
+                $logsPath = $script:consoleLogsDir
                 if (-not (Test-Path $logsPath)) {
                     New-Item -ItemType Directory -Path $logsPath -Force | Out-Null
                 }
