@@ -69,18 +69,30 @@ class BackupManager {
         }
         
         try {
-            $itemsToRestore = @("world", "world_nether", "world_the_end", "config")
-            foreach ($item in $itemsToRestore) {
-                $source = Join-Path $backupPath $item
-                $target = Join-Path $this.CurrentServerPath $item
+            # Detectar qué carpeta de mundo tiene el backup (personalizada o estándar)
+            $worldFolders = Get-ChildItem -Path $backupPath -Directory | Where-Object { $_.Name -match "^world" -or $_.Name -match "_nether$" -or $_.Name -match "_the_end$" }
+            
+            # Restaurar cada carpeta de mundo encontrada
+            foreach ($folder in $worldFolders) {
+                $source = $folder.FullName
+                $target = Join-Path $this.CurrentServerPath $folder.Name
                 
-                if (Test-Path $source) {
-                    if (Test-Path $target) {
-                        Remove-Item -Path $target -Recurse -Force -ErrorAction SilentlyContinue
-                    }
-                    Copy-Item -Path $source -Destination $target -Recurse -Force -ErrorAction SilentlyContinue
+                if (Test-Path $target) {
+                    Remove-Item -Path $target -Recurse -Force -ErrorAction SilentlyContinue
                 }
+                Copy-Item -Path $source -Destination $target -Recurse -Force -ErrorAction SilentlyContinue
             }
+            
+            # Restaurar config si existe
+            $configSource = Join-Path $backupPath "config"
+            if (Test-Path $configSource) {
+                $configTarget = Join-Path $this.CurrentServerPath "config"
+                if (Test-Path $configTarget) {
+                    Remove-Item -Path $configTarget -Recurse -Force -ErrorAction SilentlyContinue
+                }
+                Copy-Item -Path $configSource -Destination $configTarget -Recurse -Force -ErrorAction SilentlyContinue
+            }
+            
             if ($this.LogHandler) { & $this.LogHandler "[BACKUP] Restauracion completada desde $backupName" }
             return $true
         }
@@ -92,6 +104,28 @@ class BackupManager {
 
     [void]RunBackup() {
         if (-not $this.CurrentServerPath) { return }
+        
+        # Leer level-name desde server.properties
+        $serverPropsPath = Join-Path $this.CurrentServerPath "server.properties"
+        $levelName = "world"  # por defecto
+        
+        if (Test-Path $serverPropsPath) {
+            try {
+                $props = @{}
+                Get-Content $serverPropsPath | ForEach-Object {
+                    if ($_ -match '^([^=#]*)\s*=\s*(.*)') {
+                        $key = $matches[1].Trim()
+                        $value = $matches[2].Trim()
+                        $props[$key] = $value
+                    }
+                }
+                if ($props.ContainsKey("level-name")) {
+                    $levelName = $props["level-name"]
+                }
+            }
+            catch { }
+        }
+        
         $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
         $safeName = $this.CurrentServerName -replace '[\\/:*?"<>|]', '_'
         $targetRoot = Join-Path $this.RootBackupPath $safeName
@@ -101,14 +135,15 @@ class BackupManager {
             if (-not (Test-Path $targetRoot)) { New-Item -ItemType Directory -Path $targetRoot -Force | Out-Null }
             New-Item -ItemType Directory -Path $targetPath -Force | Out-Null | Out-Null
 
-            $itemsToCopy = @("world", "world_nether", "world_the_end", "server.properties", "config")
+            # Incluir el nivel-name personalizado además de los carpetas estándar
+            $itemsToCopy = @($levelName, "${levelName}_nether", "${levelName}_the_end", "world_nether", "world_the_end", "server.properties", "config")
             foreach ($item in $itemsToCopy) {
                 $source = Join-Path $this.CurrentServerPath $item
                 if (Test-Path $source) {
                     Copy-Item -Path $source -Destination $targetPath -Recurse -Force -ErrorAction SilentlyContinue
                 }
             }
-            if ($this.LogHandler) { & $this.LogHandler "[BACKUP] Copia creada en $timestamp" }
+            if ($this.LogHandler) { & $this.LogHandler "[BACKUP] Copia creada en $timestamp (world: $levelName)" }
         }
         catch {
             if ($this.LogHandler) { & $this.LogHandler "[BACKUP][ERROR] $_" }

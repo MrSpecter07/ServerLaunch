@@ -274,6 +274,8 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                         <TextBlock x:Name="LblBackups" Text="Backups" FontSize="13" FontWeight="Bold" Margin="0,0,0,8"/>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                             <ComboBox x:Name="BackupSelect" Width="350" Height="32" Margin="0,0,10,0"/>
+                            <Button x:Name="ReloadBackupsBtn" Content="Recargar" Width="90" Height="32" 
+                                    Background="#4CAF50" Foreground="White" FontWeight="Bold" Cursor="Hand" Margin="0,0,10,0"/>
                             <Button x:Name="RestoreBackupBtn" Content="Restaurar" Width="90" Height="32" 
                                     Background="#FF9800" Foreground="White" FontWeight="Bold" Cursor="Hand"/>
                         </StackPanel>
@@ -291,6 +293,17 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                                          IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"/>
                             </ScrollViewer>
                         </Border>
+                        
+                        <!-- Input de Comandos -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                            <TextBox x:Name="CommandInput" Height="35" Padding="10" Background="#3C3C3C" Foreground="White" 
+                                     BorderBrush="#ABADB3" BorderThickness="1" FontFamily="Consolas" FontSize="10"
+                                     VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="500"/>
+                            <Button x:Name="SendCommandBtn" Content="Enviar" Width="100" Height="35" 
+                                    Background="#4CAF50" Foreground="White" FontWeight="Bold" 
+                                    Cursor="Hand" Margin="10,0,0,0"/>
+                        </StackPanel>
+                        
                         <Button x:Name="ClearLog" Content="Limpiar Consola" Width="150" Height="30" 
                                 Background="#555555" Foreground="White" FontWeight="Bold" 
                                 HorizontalAlignment="Left" Cursor="Hand" Margin="10,0,0,10"/>
@@ -417,7 +430,7 @@ Get-ChildItem -Path $modulePath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                 <TextBlock x:Name="LblDifficulty" Text="Difficulty:" FontSize="12" Margin="0,0,0,8" VerticalAlignment="Center"/>
-                                <ComboBox x:Name="ServerDifficulty" Width="200" Height="32" HorizontalAlignment="Left">
+                                <ComboBox x:Name="ServerDifficulty" Width="200" Height="32" HorizontalAlignment="Left" SelectedIndex="2">
                                     <ComboBoxItem Content="peaceful" Tag="peaceful"/>
                                     <ComboBoxItem Content="easy" Tag="easy"/>
                                     <ComboBoxItem Content="normal" Tag="normal"/>
@@ -636,8 +649,8 @@ $script:translations = @{
         app_title = "SERVER LAUNCH"; app_subtitle = "Gestor de Servidores Minecraft"
         server = "Servidor"; browse = "Examinar"; playit_optional = "PlayIT (Opcional)"
         server_control = "Control del Servidor"; start = "Iniciar"; stop = "Detener"
-        restart = "Reiniciar"; terminate = "Terminar"; backups = "Backups"; restore = "Restaurar"
-        status = "Estado"; console = "Consola"; clear_console = "Limpiar Consola"
+        restart = "Reiniciar"; terminate = "Terminar"; backups = "Backups"; restore = "Restaurar"; reload_backups = "Recargar"
+        status = "Estado"; console = "Consola"; clear_console = "Limpiar Consola"; send_command = "Enviar"
         players_online = "Jugadores Online"; no_players = "Sin jugadores conectados"
         ip_server = "IP Server"; ip_voicechat = "IP Voicechat"; copy = "Copiar"
         open_playit = "Abrir Panel de PlayIT"; playit_status = "Estado"; playit_not_started = "PlayIT no iniciado"
@@ -720,8 +733,8 @@ $script:translations = @{
         app_title = "SERVER LAUNCH"; app_subtitle = "Minecraft Server Manager"
         server = "Server"; browse = "Browse"; playit_optional = "PlayIT (Optional)"
         server_control = "Server Control"; start = "Start"; stop = "Stop"
-        restart = "Restart"; terminate = "Kill"; backups = "Backups"; restore = "Restore"
-        status = "Status"; console = "Console"; clear_console = "Clear Console"
+        restart = "Restart"; terminate = "Kill"; backups = "Backups"; restore = "Restore"; reload_backups = "Reload"
+        status = "Status"; console = "Console"; clear_console = "Clear Console"; send_command = "Send"
         players_online = "Players Online"; no_players = "No players connected"
         ip_server = "Server IP"; ip_voicechat = "Voicechat IP"; copy = "Copy"
         open_playit = "Open PlayIT Panel"; playit_status = "Status"; playit_not_started = "PlayIT not started"
@@ -824,7 +837,9 @@ function Update-UILanguage {
     $window.FindName("StopBtn").Content = Get-Text 'stop'
     $window.FindName("RestartBtn").Content = Get-Text 'restart'
     $window.FindName("KillProcessBtn").Content = Get-Text 'terminate'
+    $window.FindName("ReloadBackupsBtn").Content = Get-Text 'reload_backups'
     $window.FindName("RestoreBackupBtn").Content = Get-Text 'restore'
+    $window.FindName("SendCommandBtn").Content = Get-Text 'send_command'
     $window.FindName("ClearLog").Content = Get-Text 'clear_console'
     $window.FindName("CopyMinecraftIP").Content = Get-Text 'copy'
     $window.FindName("CopyVoicechatIP").Content = Get-Text 'copy'
@@ -1170,8 +1185,10 @@ function Load-ServerProperties {
         # ComboBoxes
         if ($props.ContainsKey("level-type")) {
             $combo = $window.FindName("ServerLevelType")
+            # Normalizar level-type removiendo barras invertidas escapadas
+            $levelTypeValue = $props["level-type"] -replace '\\:', ':'
             foreach ($item in $combo.Items) {
-                if ($item.Tag -eq $props["level-type"]) {
+                if ($item.Tag -eq $levelTypeValue) {
                     $combo.SelectedItem = $item
                     break
                 }
@@ -1430,8 +1447,10 @@ function Refresh-BackupList {
                 foreach ($backup in $backups) {
                     if ($backup -match '(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})') {
                         $display = "$($matches[3])/$($matches[2])/$($matches[1]) $($matches[4]):$($matches[5]):$($matches[6])"
-                        $displayBackups += @{ Display = $display; Actual = $backup }
+                    } else {
+                        $display = $backup
                     }
+                    $displayBackups += [pscustomobject]@{ Display = $display; Actual = $backup }
                 }
                 $script:backupNameMap = @{}
                 foreach ($item in $displayBackups) {
@@ -1451,7 +1470,7 @@ function Refresh-BackupList {
                     $comboBox.Height = $calculatedHeight
                 }
                 
-                $comboBox.ItemsSource = $displayBackups.Display
+                $comboBox.ItemsSource = @($displayBackups | ForEach-Object { $_.Display })
                 if ($displayBackups.Count -gt 0) {
                     $comboBox.SelectedIndex = 0
                 } else {
@@ -1593,6 +1612,12 @@ if ($mainTabControl) {
                 Load-ServerProperties -serverPath $script:serverManager.ServerPath
             }
         }
+        if ($selectedTab -and $selectedTab.Name -eq "TabPrincipal") {
+            # Recargar lista de backups al abrir el tab Principal
+            if ($script:backupManager -and $script:serverManager) {
+                Refresh-BackupList
+            }
+        }
     })
 }
 
@@ -1603,6 +1628,40 @@ $window.FindName("ClearLog").Add_Click({
     $script:lastClearTime = Get-Date
     $script:consoleStickToBottom = $true
 })
+
+# Botón: Enviar Comando
+$window.FindName("SendCommandBtn").Add_Click({
+    $commandInput = $window.FindName("CommandInput")
+    if ($commandInput -and $commandInput.Text -and $script:cmdProcess) {
+        $command = $commandInput.Text.Trim()
+        if ($command) {
+            try {
+                $script:cmdProcess.StandardInput.WriteLine($command)
+                $script:cmdProcess.StandardInput.Flush()
+                Append-Log "[Comando] > $command"
+                $commandInput.Clear()
+            }
+            catch {
+                Append-Log "[ERROR] No se pudo enviar comando: $_"
+            }
+        }
+    }
+})
+
+# Enter en TextBox de Comandos
+$commandInput = $window.FindName("CommandInput")
+if ($commandInput) {
+    $commandInput.Add_KeyDown({
+        param($s, $e)
+        if ($e.Key -eq [System.Windows.Input.Key]::Return) {
+            $e.Handled = $true
+            $sendBtn = $window.FindName("SendCommandBtn")
+            if ($sendBtn) {
+                $sendBtn.RaiseEvent([System.Windows.RoutedEventArgs]::new([System.Windows.Controls.Button]::ClickEvent))
+            }
+        }
+    })
+}
 
 # Scroll change detection para consola
 $consoleScroll = $window.FindName("ConsoleScroll")
@@ -1923,12 +1982,13 @@ $window.FindName("StartBtn").Add_Click({
             })
             $script:logTimer.Start()
             
-            # Resetear flags de carga del servidor
+            # Resetear flags de carga del servidor y timers de auto-shutdown
             $script:serverFullyLoaded = $false
             $script:serverLoadFlag1 = $false
             $script:serverLoadFlag2 = $false
             $script:serverLoadStartTime = $null
             $script:lastPlayerSeenTime = $null  # Resetear inactividad timer
+            $script:onlinePlayers = @()  # Limpiar lista de jugadores
             
             Update-Status "server_running" "#4CAF50"
             Append-Log "[Sistema] Todos los servicios iniciados correctamente"
@@ -2054,6 +2114,15 @@ $window.FindName("KillProcessBtn").Add_Click({
     }
     Update-Status "processes_killed" "#FF6B6B"
     Set-ControlState "idle"
+})
+
+# Botón: Recargar Backups
+$window.FindName("ReloadBackupsBtn").Add_Click({
+    if ($script:backupManager -and $script:serverManager) {
+        Append-Log "[Backup] Recargando lista de backups..."
+        Refresh-BackupList
+        Append-Log "[Backup] Lista de backups recargada"
+    }
 })
 
 # Botón: Restaurar Backup

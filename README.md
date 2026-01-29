@@ -266,6 +266,11 @@ Your support helps me maintain and improve ServerLaunch with new features!
 - ✅ **Improved Error Handling**: No popup errors for missing files, only status bar messages
 - ✅ **Optimized Property Loading**: Properties load on tab click instead of initial server load
 - ✅ **Enhanced User Experience**: Reload button for manual property refresh
+- ✅ **Console Command Input**: Send commands directly to the Minecraft server (Enter or Send button)
+- ✅ **Backups UI**: New Reload Backups button and auto-refresh when opening the Principal tab
+- ✅ **Backup List Display**: Fixed list rendering so timestamps show correctly
+- ✅ **Level-Type Detection**: Properly handles `minecraft\:normal` values in `server.properties`
+- ✅ **Dark Theme Polish**: Improved ComboBox styling to match TextBox appearance
 
 ### Version 2.1
 - ✅ **Shutdown PC Option**: Properly shutdown computer after server closes using Windows shutdown command
@@ -317,17 +322,6 @@ A: Currently Windows-only (PowerShell/WPF). Linux/Mac versions may come in the f
 
 ---
 
-## � Changelog
-
-### v2.2.1 - UI/UX Patch (January 2026)
-
-**Dark Theme Improvements**:
-- Enhanced ComboBox styling for better dark mode consistency
-- ComboBox background now matches TextBox (#3C3C3C)
-- Border color unified across ComboBox and TextBox controls (#ABADB3)
-- Dropdown items (hover/selected) background improved (#3C3C3C)
-- Selected item in dropdown displays with white text for better readability
-- Selected item in closed ComboBox displays with white text
 - Dropdown arrow color adjusted to #1A1A1A for better contrast
 
 **Layout Refinements**:
